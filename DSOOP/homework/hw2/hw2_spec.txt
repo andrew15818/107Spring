@@ -1,0 +1,26 @@
+OOP Homework #2 
+
+Introduction
+In this homework, your goal is to implement a link list class that allows inserting, deleting, and editing data in the structure. You can consider the case study of Array class shown in the course slides and implement the link list structure.
+
+Requirement
+1. Implement all constructors, operators and methods we declared in class Link_List. See the attached code for a complete list of functions.
+2. Implement them in Link_List.cpp.
+3. Do NOT revise any member we declared, including their parameters, return types, etc. 
+4. However, you can add some functions to help your implementation if necessary. 
+
+Grading
+We will use a series of test data to judge if you had all functions work correctly. Your score will be determined according to the number of test data your program can process. We have included some test data in the attached file for you to check your program. 
+
+Submission
+Upload the files to e3: Link_List.h, Link_List.cpp 
+
+Deadline
+ Normal deadline: 2019/4/15 (Mon.) 23:59:59 
+ Second deadline: 2019/4/22 (Mon.) 23:59:59 [WITH PANALTY!] 
+
+Penalty
+ Late submission (after 4/15 and before 4/22): 30% discount (your_score = original_score*0.7) 
+ Copy code from others/internet: you will get a 0 in this homework
+
+If you have any problem about this homework, contact us through e3.

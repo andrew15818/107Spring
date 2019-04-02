@@ -44,6 +44,23 @@ private:
 	int size;
 	Int_Node<T> *head, *tail;								// pointer to the first and the last element of Link_List
 };
-
+//set the initial pointers to Null, value is undefinded for
+//default constructor
+template<typename T>
+Link_List<T>::Link_List(){
+	Int_Node<T> first;
+	first.pre=first.next=NULL;
+	size=1;
+}
+template<typename T >
+Link_List<T>::Link_List(const Link_List& ll){
+	for(int i=0;i<ll.size;i++){
+	
+	}	
+}
+template<typename T>
+Link_List<T>::~Link_List(){
+	
+}
 
 #endif // LINK_LIST

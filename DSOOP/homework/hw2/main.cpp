@@ -9,6 +9,7 @@ int main()
 	
     // test default constructor
     Link_List<int> linkList1;
+/*
 	cout << "Enter an integer: ";
 	cin >> linkList1;
 
@@ -51,6 +52,6 @@ int main()
     const Link_List<int> linkList5 = linkList4;
     cout << "linkList4[1]: " << linkList4[1] << endl;
     cout << "linkList5[1]: " << linkList5[1] << endl;
-
+*/
 	return 0;
 }

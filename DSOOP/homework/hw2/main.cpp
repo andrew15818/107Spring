@@ -9,10 +9,11 @@ int main()
 	
     // test default constructor
     Link_List<int> linkList1;
-/*
+
 	cout << "Enter an integer: ";
 	cin >> linkList1;
-
+	cout<<linkList1<<endl;
+/*
     // test copy constructor
     Link_List<int> linkList2(linkList1);
     

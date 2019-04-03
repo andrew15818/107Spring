@@ -46,21 +46,52 @@ private:
 };
 //set the initial pointers to Null, value is undefinded for
 //default constructor
+//maybe this is why the << doesn't print correctly ?
 template<typename T>
 Link_List<T>::Link_List(){
-	Int_Node<T> first;
-	first.pre=first.next=NULL;
+	Int_Node<T> *data = new Int_Node<T>;
+	head=tail=data;
+	data->pre=data->next=NULL;
 	size=1;
 }
 template<typename T >
-Link_List<T>::Link_List(const Link_List& ll){
-	for(int i=0;i<ll.size;i++){
-	
+//termina de corregir despues
+//for the first node in the list, the head is that,
+//then the tail equals any subsequent members of the list
+Link_List<T>::Link_List(const Link_List<T>& ll){
+	while(ll.next!= NULL){
+		Int_Node<T> *data= new Int_Node<T>;
+		data->value = ll.data.value;
+		data->pre= ll.data->prev;
+		data->next = ll.data->next;
 	}	
 }
 template<typename T>
-Link_List<T>::~Link_List(){
-	
+Link_List<T>::~Link_List(){	
 }
+template<typename U>
+//I assume the value goes at the end of the list?
+//If so, we add a node at the end  and move the tail back
+istream& operator>>(istream& is, Link_List<U> &ll){
+	Int_Node<U> *data = new Int_Node<U>;
+	is>>data->value;
 
+	data->pre  = ll.tail;
+	data->next = NULL;
+	ll.tail = data;
+	return is;
+}
+template<typename U>
+ostream& operator<<(ostream& os, const Link_List<U>& ll){
+	Int_Node<U> *tmp = new Int_Node<U>;
+	tmp = ll.head;	
+
+	while(tmp != nullptr){
+		os<<tmp->value;	
+		tmp = tmp->next; 
+	}
+
+	delete tmp;
+	return os;
+}
 #endif // LINK_LIST

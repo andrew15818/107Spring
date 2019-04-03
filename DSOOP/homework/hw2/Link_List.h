@@ -50,8 +50,10 @@ private:
 template<typename T>
 Link_List<T>::Link_List(){
 	Int_Node<T> *data = new Int_Node<T>;
+	
+	//data->value = NULL;
+	data->pre=data->next=nullptr;
 	head=tail=data;
-	data->pre=data->next=NULL;
 	size=1;
 }
 template<typename T >
@@ -59,39 +61,44 @@ template<typename T >
 //for the first node in the list, the head is that,
 //then the tail equals any subsequent members of the list
 Link_List<T>::Link_List(const Link_List<T>& ll){
-	while(ll.next!= NULL){
+	while(ll.data !=  nullptr){
 		Int_Node<T> *data= new Int_Node<T>;
 		data->value = ll.data.value;
 		data->pre= ll.data->prev;
 		data->next = ll.data->next;
 	}	
+	size =ll.size;
 }
 template<typename T>
 Link_List<T>::~Link_List(){	
 }
-template<typename U>
-//I assume the value goes at the end of the list?
-//If so, we add a node at the end  and move the tail back
-istream& operator>>(istream& is, Link_List<U> &ll){
-	Int_Node<U> *data = new Int_Node<U>;
-	is>>data->value;
 
-	data->pre  = ll.tail;
-	data->next = NULL;
+//insert value at the end of the list
+//If so, we add a node at the end  and move the tail back
+template<typename U>
+istream& operator>>(istream& is, Link_List<U>& ll){
+	Int_Node<U> *data= new Int_Node<U>; 
+	is>>data->value;
+	data->pre = ll.tail;
+	data->next = nullptr;
+	ll.tail->next = data;
 	ll.tail = data;
+	
+	ll.size++;
 	return is;
 }
 template<typename U>
 ostream& operator<<(ostream& os, const Link_List<U>& ll){
 	Int_Node<U> *tmp = new Int_Node<U>;
-	tmp = ll.head;	
+	tmp = ll.head;
+	//cout<<"list currently has "<<ll.size<<endl;
+	//cout<<"current head and tail are: "<<endl;
+	cout<<"tail: "<<tmp->value<<endl; 
 
-	while(tmp != nullptr){
-		os<<tmp->value;	
-		tmp = tmp->next; 
+	while(tmp!=nullptr){
+		os<<tmp->value;
+		tmp=tmp->next;	
 	}
-
-	delete tmp;
 	return os;
 }
 #endif // LINK_LIST

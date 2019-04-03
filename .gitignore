@@ -2,6 +2,8 @@
 
 #basically some homeworks and textbooks I keep
 *textbook.pdf
+#all executable files, can recompile on local machine
+*a.out 
 
 #kept under a separate git
 Databases/hw2/

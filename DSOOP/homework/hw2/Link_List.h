@@ -44,30 +44,50 @@ private:
 	int size;
 	Int_Node<T> *head, *tail;								// pointer to the first and the last element of Link_List
 };
+/* 
+ * For a linked list, the heaad pointer is at the left in your drawing, therefore head->pre should be null, same as 
+ * tail->next
+ */
 //set the initial pointers to Null, value is undefinded for
 //default constructor
-//maybe this is why the << doesn't print correctly ?
 template<typename T>
 Link_List<T>::Link_List(){
-	Int_Node<T> *data = new Int_Node<T>;
-	
-	//data->value = NULL;
-	data->pre=data->next=nullptr;
-	head=tail=data;
-	size=1;
+	//Int_Node<T> *data = new Int_Node<T>;	
+	head = tail = nullptr;
+	//data->pre=data->next=nullptr;
+	//head=tail=data;
+	size=0;
 }
 template<typename T >
 //termina de corregir despues
 //for the first node in the list, the head is that,
 //then the tail equals any subsequent members of the list
 Link_List<T>::Link_List(const Link_List<T>& ll){
-	while(ll.data !=  nullptr){
+	Int_Node<T> *tmp  = new Int_Node<T>; 		/*node object we will use for traversing the list*/
+	tmp = ll.head;
+	head=tail=nullptr;
+	size =0;
+	while(tmp !=  nullptr){	
 		Int_Node<T> *data= new Int_Node<T>;
-		data->value = ll.data.value;
-		data->pre= ll.data->prev;
-		data->next = ll.data->next;
+		data->value  = tmp->value;
+		if(head == nullptr && tail == nullptr && head == tail && size==0){
+			data->pre =data->next = nullptr;	/*creating first node, setting equal to head, tail */
+			head = tail = data;
+			continue;
+		}
+		else{
+			data->pre   = tail; 				/*adding a new node, shifting accordingly*/
+			data->next  = nullptr;
+			tail->next = data;
+			tail = data;	
+			continue;
+		}
+		tmp=tmp->next;
+		size++;
 	}	
-	size =ll.size;
+	cout<<"size after copying "<<size<<endl;
+	delete tmp;
+	//size =ll.size;
 }
 template<typename T>
 Link_List<T>::~Link_List(){	
@@ -78,25 +98,30 @@ Link_List<T>::~Link_List(){
 template<typename U>
 istream& operator>>(istream& is, Link_List<U>& ll){
 	Int_Node<U> *data= new Int_Node<U>; 
-	is>>data->value;
-	data->pre = ll.tail;
-	data->next = nullptr;
-	ll.tail->next = data;
-	ll.tail = data;
-	
-	ll.size++;
-	return is;
+	/*If there are no nodes, create a new one with value*/
+	if( ll.head	== nullptr && ll.tail == nullptr && ll.size ==0){
+		is>>data->value;
+		data->pre=data->next = nullptr;
+		ll.head = ll.tail =data;
+		ll.size++;
+		//cout<<"first element in list is "<<ll.head->value<<endl;
+		return is;
+	}
+		is>>data->value;
+		//cout<<"next element is "<<data->value<<endl;
+		data->pre = ll.tail;
+		data->next = nullptr;
+		ll.tail->next = data;
+		ll.tail = data;		
+		ll.size++;
+		return is;
 }
 template<typename U>
 ostream& operator<<(ostream& os, const Link_List<U>& ll){
 	Int_Node<U> *tmp = new Int_Node<U>;
 	tmp = ll.head;
-	//cout<<"list currently has "<<ll.size<<endl;
-	//cout<<"current head and tail are: "<<endl;
-	cout<<"tail: "<<tmp->value<<endl; 
-
 	while(tmp!=nullptr){
-		os<<tmp->value;
+		os<<tmp->value<<" ";
 		tmp=tmp->next;	
 	}
 	return os;

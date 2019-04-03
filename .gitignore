@@ -1,10 +1,11 @@
 #gitignore for my homework repo
 
 #basically some homeworks and textbooks I keep
-*.pdf
+*textbook.pdf
 
 #kept under a separate git
 Databases/hw2/
+
 #Two large bois in /Databases/hw2
 *.csv
 

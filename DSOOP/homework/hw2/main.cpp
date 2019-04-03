@@ -22,7 +22,7 @@ int main()
 
     // test copy constructor
     Link_List<int> linkList2(linkList1);
-	cout<<"l2 "<<linkList2<<endl;
+	cout<<linkList2<<endl;
 /*    
     // test getSize()
     cout << "linkList2 Size: " << linkList2.getSize() << endl;

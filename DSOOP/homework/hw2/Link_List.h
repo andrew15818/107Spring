@@ -29,8 +29,7 @@ public:
 	bool operator==(const Link_List &) const;			// equality operator
 	bool operator!=(const Link_List &right) const		// inequality operator
 	{
-		return !(*this == right);
-	}
+		return !(*this == right); }
 
 	T &operator[](int index);							// subscript operator for non-const objects
 	T operator[](int index) const;						// subscript operator for const objects
@@ -70,24 +69,21 @@ Link_List<T>::Link_List(const Link_List<T>& ll){
 	while(tmp !=  nullptr){	
 		Int_Node<T> *data= new Int_Node<T>;
 		data->value  = tmp->value;
-		if(head == nullptr && tail == nullptr && head == tail && size==0){
+		if(size==0){
 			data->pre =data->next = nullptr;	/*creating first node, setting equal to head, tail */
 			head = tail = data;
-			continue;
 		}
 		else{
 			data->pre   = tail; 				/*adding a new node, shifting accordingly*/
 			data->next  = nullptr;
 			tail->next = data;
 			tail = data;	
-			continue;
 		}
 		tmp=tmp->next;
 		size++;
 	}	
 	cout<<"size after copying "<<size<<endl;
 	delete tmp;
-	//size =ll.size;
 }
 template<typename T>
 Link_List<T>::~Link_List(){	
@@ -124,6 +120,7 @@ ostream& operator<<(ostream& os, const Link_List<U>& ll){
 		os<<tmp->value<<" ";
 		tmp=tmp->next;	
 	}
+	delete tmp;
 	return os;
 }
 #endif // LINK_LIST

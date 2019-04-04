@@ -21,8 +21,8 @@ class Link_List
 
 public:
 	Link_List();										// default constructor
-	Link_List(const Link_List &);						// copy constructor
-	~Link_List();
+	Link_List(const Link_List &);						// copy constructor 
+	~Link_List(); 
 	int getSize() const;
 	
 	const Link_List &operator=(const Link_List &);		// assignment operator
@@ -82,11 +82,22 @@ Link_List<T>::Link_List(const Link_List<T>& ll){
 		tmp=tmp->next;
 		size++;
 	}	
-	cout<<"size after copying "<<size<<endl;
+	//cout<<"size after copying "<<size<<endl;
 	delete tmp;
 }
 template<typename T>
 Link_List<T>::~Link_List(){	
+	Int_Node<T> *tmp = new Int_Node<T>;
+	tmp = head;
+	while(tmp!= NULL){
+		tmp = tmp->next;	
+		delete tmp;
+	}
+	//cout<<"deleted list"<<endl;
+}
+template<typename T>
+int Link_List<T>::getSize() const {
+	return size;
 }
 
 //insert value at the end of the list
@@ -122,5 +133,9 @@ ostream& operator<<(ostream& os, const Link_List<U>& ll){
 	}
 	delete tmp;
 	return os;
+}
+template<typename T>
+const Link_List<T>& Link_List<T>::operator=(const Link_List& ll){
+	
 }
 #endif // LINK_LIST

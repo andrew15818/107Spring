@@ -10,23 +10,23 @@ int main()
     // test default constructor
     Link_List<int> linkList1;
 	cout << "Enter an integer: ";
-
+/*
 	for(int i=0; i<3;i++){
 		cin>>linkList1;	
 		cout<<"printing list after "<<i<<" insertions: "<<linkList1<<endl;
 	}
+*/
 
-
-	//cin >> linkList1;
+	cin >> linkList1;
 	cout<<linkList1<<endl;
 
     // test copy constructor
     Link_List<int> linkList2(linkList1);
-	cout<<linkList2<<endl;
-/*    
+//	cout<<linkList2<<endl;
+    
     // test getSize()
     cout << "linkList2 Size: " << linkList2.getSize() << endl;
-
+/*
     // test insert_node(value), delete_node(), operator<<, operator>>
 
     Link_List<int> linkList3;

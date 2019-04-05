@@ -96,7 +96,6 @@ template<typename T>
 int Link_List<T>::getSize() const {
 	return size;
 }
-
 //insert value at the end of the list
 //If so, we add a node at the end  and move the tail back
 template<typename U>
@@ -119,14 +118,12 @@ istream& operator>>(istream& is, Link_List<U>& ll){
 		return is;
 }
 template<typename U>
-ostream& operator<<(ostream& os, const Link_List<U>& ll){
-	Int_Node<U> *tmp = new Int_Node<U>;
-	tmp = ll.head;
+ostream& operator<<(ostream& os, const Link_List<U>& ll){	
+	Int_Node<U> *tmp = ll.head;
 	while(tmp!=nullptr){
 		os<<tmp->value<<" ";
 		tmp=tmp->next;	
 	}
-	delete tmp;
 	return os;
 }
 /*I imagine this is similar to the copy constructor?*/
@@ -153,10 +150,8 @@ const Link_List<T>& Link_List<T>::operator=(const Link_List& ll){
 /*If the values in a list don't appear in the same order, return  false*/
 template<typename T>
 bool Link_List<T>::operator==(const Link_List<T>& ll)const{
-	Int_Node<T> *tmp = new Int_Node<T>; 
-	tmp=ll.head;
-	Int_Node<T> *current = new Int_Node<T>;
-	current = this->head;
+	Int_Node<T> *tmp =ll.head;
+	Int_Node<T> *current =  this->head;
 	while(tmp=NULL){
 		if(tmp->value != current->value){
 			delete tmp;
@@ -183,6 +178,7 @@ T& Link_List<T>::operator[](int index){
 		tmp=tmp->next;
 		i++;
 	}
+	return head->value;/*return the first value if loop fails*/
 }
 template<typename T>
 T Link_List<T>::operator[](int index)const{
@@ -197,5 +193,60 @@ T Link_List<T>::operator[](int index)const{
 	}
 }
 template<typename T>
+bool Link_List<T>::insert_node(T value){
+	Int_Node<T> *data = new Int_Node<T>;
+
+	data->value  = value;
+
+	if(size ==0){
+		head = data;			/*If the list is empty, create a new first node with value*/
+		data->pre=nullptr;	
+
+	}
+	else{	
+		data->pre = tail;
+		tail->next= data;
+	}
+	tail=data;
+	data->next=nullptr;
+	size++;
+	return true;
+}
+
+/*delete the last node of the list*/
+template<typename T>
+bool Link_List<T>::delete_node(){
+	if(size==0){
+		return false;	
+	}	
+	Int_Node<T> *tmp = tail;
+	tail->pre->next = nullptr;
+	tail = tail->pre;
+
+	delete tmp;
+	return true;
+}
+template<typename T>
+bool Link_List<T>::insert_node(int index, T value){
+	Int_Node<T> *data=new Int_Node<T>;
+	Int_Node<T> *current = head;
+	data->value = value;
+	int i=0;
+	if(index>=size || size==0){ 						/*We account for these two cases in the one-argument insert_node*/
+			bool result = this->insert_node(value); 	/*return status of insertion operation */
+			return result;
+	} 	
+	while(i<=index){
+		if(i==index){
+			data->pre = current;
+			data->next = current->next;
+			current->next = data;		
+			size++;
+		}
+		current=current->next;
+		i++;	
+	}			
+	return true;
+}
 
 #endif // LINK_LIST

@@ -33,8 +33,9 @@ int main()
 	cout << "Enter a integer: ";
     cin >> linkList3;
 	cout << "linkList3: "<< linkList3 << endl;
-/*
+	cout<<linkList3.getSize()<<endl;
     linkList3.insert_node(11);
+
     linkList3.insert_node(12);
     linkList3.insert_node(13);
     linkList3.insert_node(14);
@@ -51,7 +52,7 @@ int main()
 
     cout << "Insert Boolean: " << linkList4.insert_node(3, 17) << endl;
     cout << "linkList4: " << linkList4 << endl;
-
+/*
     cout << "Delete Boolean: " << linkList4.delete_node(4) << endl;
     cout << "Equality Boolean: " << (linkList4==linkList3) << endl;
     cout << "linkList4: " << linkList4 << endl;

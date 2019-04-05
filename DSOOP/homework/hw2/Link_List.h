@@ -154,15 +154,12 @@ bool Link_List<T>::operator==(const Link_List<T>& ll)const{
 	Int_Node<T> *current =  this->head;
 	while(tmp=NULL){
 		if(tmp->value != current->value){
-			delete tmp;
-			delete current;
 			return false;	
 		}	
 		tmp = tmp->next;
 		current = current->next;
 	}
-	delete tmp;	
-	delete current;
+
 	return true;
 }
 /*To return the value at the index, we have to traverse the entire list up
@@ -191,6 +188,7 @@ T Link_List<T>::operator[](int index)const{
 		i++;
 		tmp=tmp->next;
 	}
+	return tmp->value;
 }
 template<typename T>
 bool Link_List<T>::insert_node(T value){
@@ -246,6 +244,27 @@ bool Link_List<T>::insert_node(int index, T value){
 		current=current->next;
 		i++;	
 	}			
+	return true;
+}
+template<typename T>
+bool Link_List<T>::delete_node(int index){
+ 	if(index >= size){
+		bool result = this->delete_node();				/*Already accounted for this case*/
+		return result;
+	};	
+	Int_Node<T> *current = head;							/*Node used for traversing the list */
+	int i=0;
+	while(i<=index){
+		if(i==index){
+		
+			current->pre->next = current->next;	
+			current ->next->pre= current->pre;
+			delete current;
+			return true;
+		}
+		i++;
+		current= current->next;	
+	}
 	return true;
 }
 

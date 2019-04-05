@@ -52,7 +52,7 @@ int main()
 
     cout << "Insert Boolean: " << linkList4.insert_node(3, 17) << endl;
     cout << "linkList4: " << linkList4 << endl;
-/*
+
     cout << "Delete Boolean: " << linkList4.delete_node(4) << endl;
     cout << "Equality Boolean: " << (linkList4==linkList3) << endl;
     cout << "linkList4: " << linkList4 << endl;
@@ -61,6 +61,6 @@ int main()
     const Link_List<int> linkList5 = linkList4;
     cout << "linkList4[1]: " << linkList4[1] << endl;
     cout << "linkList5[1]: " << linkList5[1] << endl;
-*/
+
 	return 0;
 }

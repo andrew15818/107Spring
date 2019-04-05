@@ -47,20 +47,16 @@ private:
  * For a linked list, the heaad pointer is at the left in your drawing, therefore head->pre should be null, same as 
  * tail->next
  */
-//set the initial pointers to Null, value is undefinded for
-//default constructor
+/*Initial constructor only creates head,tail ptrs, sets size to zero, values
+ * and other nodes are created elsewhere as needed.*/
 template<typename T>
 Link_List<T>::Link_List(){
-	//Int_Node<T> *data = new Int_Node<T>;	
 	head = tail = nullptr;
-	//data->pre=data->next=nullptr;
-	//head=tail=data;
 	size=0;
 }
-template<typename T >
-//termina de corregir despues
-//for the first node in the list, the head is that,
-//then the tail equals any subsequent members of the list
+/*set a tmp node equal to the header and set the corresponding node in the list
+ * with the same value*/
+template<typename T>
 Link_List<T>::Link_List(const Link_List<T>& ll){
 	Int_Node<T> *tmp  = new Int_Node<T>; 		/*node object we will use for traversing the list*/
 	tmp = ll.head;
@@ -85,15 +81,16 @@ Link_List<T>::Link_List(const Link_List<T>& ll){
 	//cout<<"size after copying "<<size<<endl;
 	delete tmp;
 }
+/*destructor deletes every node*/
 template<typename T>
 Link_List<T>::~Link_List(){	
 	Int_Node<T> *tmp = new Int_Node<T>;
 	tmp = head;
 	while(tmp!= NULL){
-		tmp = tmp->next;	
 		delete tmp;
+		tmp = tmp->next;	
+		size--;
 	}
-	//cout<<"deleted list"<<endl;
 }
 template<typename T>
 int Link_List<T>::getSize() const {
@@ -111,11 +108,9 @@ istream& operator>>(istream& is, Link_List<U>& ll){
 		data->pre=data->next = nullptr;
 		ll.head = ll.tail =data;
 		ll.size++;
-		//cout<<"first element in list is "<<ll.head->value<<endl;
 		return is;
 	}
 		is>>data->value;
-		//cout<<"next element is "<<data->value<<endl;
 		data->pre = ll.tail;
 		data->next = nullptr;
 		ll.tail->next = data;
@@ -134,8 +129,73 @@ ostream& operator<<(ostream& os, const Link_List<U>& ll){
 	delete tmp;
 	return os;
 }
+/*I imagine this is similar to the copy constructor?*/
 template<typename T>
 const Link_List<T>& Link_List<T>::operator=(const Link_List& ll){
-	
+	Int_Node<T> *tmp=ll.head;			
+	while(tmp!=NULL){
+		Int_Node<T> *data;
+		if(size==0){
+			data->value = tmp->value;
+			data->next=data->prev = nullptr;	
+			head = tail =data;
+			continue;
+		}
+		data->value = tmp->value;	
+		data->prev = tail;
+		data->next = nullptr;
+		tail = data;
+		tmp= tmp->next;	
+	}
+	delete tmp;
+	return *this;
 }
+/*If the values in a list don't appear in the same order, return  false*/
+template<typename T>
+bool Link_List<T>::operator==(const Link_List<T>& ll)const{
+	Int_Node<T> *tmp = new Int_Node<T>; 
+	tmp=ll.head;
+	Int_Node<T> *current = new Int_Node<T>;
+	current = this->head;
+	while(tmp=NULL){
+		if(tmp->value != current->value){
+			delete tmp;
+			delete current;
+			return false;	
+		}	
+		tmp = tmp->next;
+		current = current->next;
+	}
+	delete tmp;	
+	delete current;
+	return true;
+}
+/*To return the value at the index, we have to traverse the entire list up
+ * to that point*/
+template<typename T>
+T& Link_List<T>::operator[](int index){
+	Int_Node<T> *tmp = head;;
+	int i=0;
+	while(tmp!=NULL){
+		if(i==index){
+			return tmp->value;
+		}
+		tmp=tmp->next;
+		i++;
+	}
+}
+template<typename T>
+T Link_List<T>::operator[](int index)const{
+	Int_Node<T> *tmp = head; 
+	int i=0;
+	while(tmp!=NULL){
+		if(i==index){
+			return tmp->value;	
+		}	
+		i++;
+		tmp=tmp->next;
+	}
+}
+template<typename T>
+
 #endif // LINK_LIST

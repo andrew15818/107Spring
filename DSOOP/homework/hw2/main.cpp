@@ -22,18 +22,18 @@ int main()
 
     // test copy constructor
     Link_List<int> linkList2(linkList1);
-//	cout<<linkList2<<endl;
+	//cout<<linkList2<<endl;
     
     // test getSize()
     cout << "linkList2 Size: " << linkList2.getSize() << endl;
-/*
+
     // test insert_node(value), delete_node(), operator<<, operator>>
 
     Link_List<int> linkList3;
 	cout << "Enter a integer: ";
     cin >> linkList3;
 	cout << "linkList3: "<< linkList3 << endl;
-
+/*
     linkList3.insert_node(11);
     linkList3.insert_node(12);
     linkList3.insert_node(13);

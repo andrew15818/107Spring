@@ -30,9 +30,6 @@ void sum(int *n1, int *n2, const int digits){
 	bool overflow=false; //if there is overflow in the last digit to be added
 	for(int i=digits-1; i>=0;i--){
 		int small_sum=0; // if >=10, will hold the ones position, the tens will be the carry;
-		//cout<<"carry value "<<carry<<endl;
-		//cout<<small_sum<<endl;
-
 		small_sum = n1[i] + n2[i] + carry;
 		carry=0;
 		if( small_sum>=10){
@@ -50,7 +47,7 @@ void sum(int *n1, int *n2, const int digits){
 		}
 
 		result[i]= small_sum;
-		//cout<<"currently adding "<<n1[i]<<"+"<<n2[i]<<"+"<<carry<<" getting result "<<result[i]<<endl;
+
 	}
 
 	if(overflow){

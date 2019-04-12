@@ -44,8 +44,9 @@ output          zero;
 output          cout;
 output          overflow;
 
-reg             zero;
-reg             overflow;
+wire zero;
+wire [31:0] addition;
+
 
 //Our own regs
 reg             A_invert; 
@@ -56,13 +57,14 @@ reg             cin;//This can be used for twos complement
 wire     [32-1:0] mulCout; //check why this has to be wire and not register
 reg     [1:0]   subOp;
 
-
+assign zero =  (result == 32'd0);
+assign cout = mulCout[31];
 
 alu_top alut_top_0(
     .src1(src1[0]),
     .src2(src2[0]),
-    .less(result[31]),//I think this is what it is
-    .equal(1'b0),//TODO change this to actually do something
+    .less(addition[31]),
+    .equal(addition==32'd0),
     .lsb(1'b1),
     .A_invert(A_invert),
     .B_invert(B_invert),
@@ -70,7 +72,8 @@ alu_top alut_top_0(
     .comp(bonus_control),
     .operation(subOp),
     .result(result[0]),
-    .cout(mulCout[0])
+    .cout(mulCout[0]),
+    .addition(addition[0])
     );
 genvar ind;
 generate
@@ -79,7 +82,7 @@ generate
         .src1(src1[ind]),
         .src2(src2[ind]),
         .less(1'b0),
-        .equal(1'b0),//TODO change this to actually do something
+        .equal(addition == 0),
         .lsb(1'b0),
         .A_invert(A_invert),
         .B_invert(B_invert),
@@ -87,7 +90,8 @@ generate
         .comp(bonus_control),
         .operation(subOp),
         .result(result[ind]),
-        .cout(mulCout[ind])
+        .cout(mulCout[ind]),
+        .addition(addition[ind])
     );
 end
 
@@ -132,10 +136,11 @@ always @(*) begin
             subOp = 0;//a'+b' = a nand b
         end
         4'b0111 : begin//Set Less than
-            A_invert = 1'b0;
-            B_invert = 1'b1;
-            cin = 1'b1;
-            subOp = 2;
+            A_invert <= 1'b0;
+            B_invert <= 1'b1;
+            cin <= 1'b1;
+            subOp <= 3;//Add after setting the B to 2s complement -> this will set up the conditions for comparison.
+            
             //TODO ahorita solo modifica el lsb del result
             //lo que podriamos hacer para dejar todo en 0 es hacerle and con 00..01 per
             //en el siguiente "computation cycle"

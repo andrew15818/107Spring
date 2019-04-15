@@ -44,14 +44,29 @@ private:
 	int size;
 	Int_Node<T> *head, *tail;								// pointer to the first and the last element of Link_List
 };
+<<<<<<< HEAD
 /*Initial constructor only creates head,tail ptrs, sets size to zero, values
  * and other nodes are created elsewhere as needed.*/
+=======
+/* 
+ * For a linked list, the heaad pointer is at the left in your drawing, therefore head->pre should be null, same as 
+ * tail->next
+#*/  
+/*Initial constructor only creates head,tail ptrs, sets size to zero, values
+ * and other nodes are created elsewhere as needed.*/
+
+>>>>>>> 00d06b0a9a30dd121cbeba5cdae958a42b99abe3
 template<typename T>
 Link_List<T>::Link_List(){
 	head = tail = NULL;
 	size=0;
 }
+<<<<<<< HEAD
 /*set a tmp node equal to the header and set the corresponding node in the list
+=======
+/*
+*set a tmp node equal to the header and set the corresponding node in the list
+>>>>>>> 00d06b0a9a30dd121cbeba5cdae958a42b99abe3
  * with the same value*/
 
 template<typename T>

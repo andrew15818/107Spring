@@ -253,5 +253,25 @@ Then what is the difference between a regular virtual and a pure virtual functio
 function, we give each derived class the option of overriding the function declared in the base class; however,
 with a pure virtual function every derived class is required to override the function, since it doesn't have a
 "default" base-class implemenatation in any case. 
+
+It would make sense to declare a pure function when it would not make sense for the base class to have one but 
+we would like every base class to have one. For example, for the Shape class, it wouldn't make sense to 
+have an area() method in the base class since Shape is too general, and different kinds of shapes have different
+implementations of it.
+
+Even if the abstract base class can't have any objects instantiated from it, we can still declare pointers to 
+the object and use it to manipulate objects of derived classes in a polymorphic way.
+
+C++ implements polymorphic behavior with the use of \textit{vtables}.
+
+A \textbf{\textit{vtable}} is a tbale which keeps track of virtual functions. For every object, there is a pointer
+to  the object's vtalbe, which contains pointers to the virtual methods of the class. When we call a virtual 
+method, the pointer to the vtable will lookup the virtual method that we need to execute. 
+\subsection{Virtual Destructors}
+If in one of the derived classes we declare a destructor that deletes the pointer to the object that called
+it, bad things will happen.
+
+To avoid this, we can declare a base class destructor and declare it virtual. If we do so, then the derived
+class destructor will be called when we want to destroy a derived class object with a base class pointer.
 \end{document}
 

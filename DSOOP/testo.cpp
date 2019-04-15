@@ -1,32 +1,22 @@
 #include<iostream>
 using namespace std;
-class Player{
+class Being{
 	private:
-		float health, attack;
+		int height, weight;
 	public:
-
-	Player(float health, float attack){
-		this->health = health;
-		this->attack = attack;
-	}
-	void print(){
-		cout<<"health: "<<health<<" attack "<<attack<<endl;
-	}
-};
-class goblin:public Player{
-	private:
-		float health, attack,defense;
-	public:
-		goblin(float health, float attack, float defense):Player(health, attack), defense(defense){};
-		virtual void print(){
-			cout<<"Calling derived class function with values"<<health<< " attack "<<attack<<" defense "<<defense<<endl;	
+		Being(int height, int weight):height(height), weight(weight){}
+		Being& set(int height, int weight){
+			this->height=height;
+			this->weight=weight;	
+			return *this;
 		}
-
+		void print(){
+			cout<<"height: "<< height<<"weight: "<<weight<<endl;	
+		}
 };
 int main(){
-	Player *p;
-	goblin g(69, 420, 240);
-	p = &g;
-	p->print();
-	return 	0;
+	Being me(69, 420);	
+	me.set(1,3).set(4,5);
+	me.print();
+	return 0;
 }

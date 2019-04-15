@@ -47,18 +47,19 @@ private:
 /* 
  * For a linked list, the heaad pointer is at the left in your drawing, therefore head->pre should be null, same as 
  * tail->next
-#  */
+#*/  
 /*Initial constructor only creates head,tail ptrs, sets size to zero, values
  * and other nodes are created elsewhere as needed.*/
-/*
+
 template<typename T>
 Link_List<T>::Link_List(){
 	head = tail = nullptr;
 	size=0;
 }
+/*
 *set a tmp node equal to the header and set the corresponding node in the list
  * with the same value*/
-/*
+
 template<typename T>
 Link_List<T>::Link_List(const Link_List<T>& ll){
 	Int_Node<T> *tmp  = new Int_Node<T>; 		/*node object we will use for traversing the list*/
@@ -270,5 +271,5 @@ bool Link_List<T>::delete_node(int index){
 	}
 	return true;
 }
-*/
+
 #endif // LINK_LIST

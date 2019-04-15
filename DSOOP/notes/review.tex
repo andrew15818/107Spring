@@ -116,4 +116,142 @@ in the class declaration. This will make the varaible be kept in the heap, where
 
 Static member values and member variables can be referenced even when there are no objects that have
 been declared.
+\newpage
+\section{Operator Overloading}
+For custom defined objects, we can define the functions of several operators to perform a certain way. 
+For user-defined objects, we can also specify how the compiler is supposed to treat a call to an operator
+when it sees one, depending on the parameters we wish to use. 
+
+To mimic the regular functionalty of the operator should be a no-brainer when overloading the operators.
+
+However, opeartor overlaoding should be done with caution, especially in the case that dynamic memory is being 
+used or other types of pointers. We can only modify the behaviors of the operators with certain objects;
+we cannot change the fundamental procedure.
+
+\textbf{Interesting:} Any overloaded operator requires that the call to it includes a user defined type. This 
+is a continuation of the idea that the operator cannot change the fundamental procedure on fundamental types.
+
+If we want to declare a global overloading function, for performance reasons we could declare it as a 
+\texttt{friend} function. If we wanted to do so, we would have to declare the function as a friend 
+function in the class/object declaration.
+
+\textbf{Careful:} If the first argument to the operator function is an object of another class, then the funciton
+must be declared as a friend function, and the object itself must be the argument. Why? If we wanted to represent
+the overloaded function call, it woule be, for example:
+\begin{verbatim}
+operator<<(obj.name, cout);
+\end{verbatim}
+This would require the programmer to write:
+\begin{verbatim}
+Obj.name<<cout;
+\end{verbatim}
+While a declaration like this is possible, it would require the programmer to pay extra attention to this 
+specific type of operator. For convencience, we would declare input and output functions as friends.
+\subsection{Overloading Stream Insertion and Extraction Operators}
+To overload \texttt{<<} and \texttt{>>} operators, we need to declare the overloaded functions as friend function.
+However, if we want to enable cascading, we should return a reference to either \texttt{istream} or 
+\texttt{ostream}, depening on the function call. Therefore, a prototypical output function might look like 
+\begin{verbatim}
+ostream &operator<<(ostream& os, const &Obj.name ){
+	/*print whatever you want bro it's your life*/
+	return os;
+}
+\end{verbatim}
+This will ensure that we can call multiple input or output functions one after another, since the type returned
+will be the same type required to call the next function, or a reference to input or output stream.
+
+Here, we are returning a reference, but why is it not dangerous? The reference to \texttt{istream} and 
+\texttt{ostream} are long-lived, so we are not really returning a reference to an automatic variable.
+
+\textbf{Const vs. Non Const Reference}: If we have an operator overloading function, we need to decide if 
+we want to return a const reference or not. Usually, for subscript operators, we will need to define 
+two different functions: one for when the object is an rvalue and one where the returned value is to 
+serve as an lvalue. If the value returned is to serve as an rvalue, then we would be able to use the value 
+as an assignment to another value or variable. Else, we could change the value in our function because
+we could reassign the value the reference points to.
+\subsection{Dynamic Memory Management}
+With C++ (and C, but differently) we can create pointers to values or objects and arrays at runtime, depending 
+on how we need the values. These values are set with the keywords \texttt{new} and \texttt{delete}. 
+
+The new keyword will return a pointer to the object we have just returned.
+
+Then, whenever we don't need to use te memory anymore, we can deallocate the memory with \texttt{delete}. 
+Since the memory is located on the heap, there is only a limited amount of memory available. If memory
+was not succesfully allocated for the object, an exception is thrown
+
+If the memory released, there will be a \textit{memory leak}, which one time crashed my desktop :(.
+
+To allocate dynamic memory for fundamental types and arrays, the declaration would look something like: 
+\begin{verbatim}
+double *ptr = new double(...);
+int *arr = new int[size];
+delete ptr;
+delete arr[];
+\end{verbatim}
+The last two lines show the statement for deleting dynamically allocated memory.
+
+Remember to always pass the object by reference to the copy constructor, otherwise the assignment will result
+in infinite recursion. (My favorite type of recursion though)
+
+If our class contains pointers to dynamically allocated memory, we really need to define a copy and 
+assignment operator, because we would need to create new dynamically allocated values for our current class. 
+\subsection{Converting Between Two Types}
+Sometimes, we would need to declare an operator to cast an object from one type to another; however, we
+would need to define the operator for this specific conversion. 
+\subsection{Increasing INcrement and Decrement Operators}
+If we want to define the postfix and prefix increment operators, by differentiating their signatures we could
+tell them apart. \textbf{The prefix versions of the increment operators are overloaded in exactly the same way!}.
+
+With the postfix operator, we would have to pass another int argument, usually set to 0 and called 
+a \textit{dummy variable }.
+
+An implicit conversion would be one where we convert from one type to another and we want to carry out the 
+assignment in that manner; if we use the keyword \texttt{explicit} this is \textit{explicitly} not allowed :).
+\newpage
+\section{Object-Oriented Programming: Inheritance}
+Suppose we have two classes. If one class is contained in another class (for example a shape contains a circle),
+we can specify one class to inherit the functionality of the other class. Unlike composition, which establishes
+a has-a relationship, we now establish a "is-a relationship." For example, a circle \textit{is} a shape, and 
+so any characteristic that a shape posseses, a circle should also posses.
+
+One class can also inherit from multiple classes. Derived-class objects \textit{are} base class objects; however
+base class objects are not base-class objects.
+
+Whenever we have a class inherit from another class, we have to specifically call the base-class constructor in
+our  derived class constructor, since our derived object should also possess the functionality and values
+of the base class.
+
+\textbf{Protected Inheritance} will allow our derived class objects to access base class objects. However, 
+to encourage proper software practice, we should use get and set functions and leave the optimizations to the 
+copmiler.
+\newpage
+\section{Object-Oriented Programming: Polymorphism}
+As the name implies, a polymorphic function can have multiple implementations depednding on the type of object.
+Polymorphism can be implemented mostly through base class pointers to derived class objects and a special type of
+function declaration in the base class.
+
+When we have a base class pointer pointing at a derived class object, and we want to execute a function
+exclusive to the derived class, there will be an error. This is because in this situation (i.e. without virtual 
+functions), ,we would be calling the base class version of the function using the derived class data; however, 
+since there is no such function in the base class, there will be an error when trying to call the function.
+
+To avoid this error, we can \textit{downcast} the base class pointer to an object of the derived class. 
+
+\textbf{\textit{virtual functions}}: If in the base class we declare a function to ve \texttt{virtual}, then 
+we can oberride its functionality in the derived class declarations, so that the derived class implementation
+executes.
+\subsection{Abstract Classes and Pure Virtual Functions}
+\textbf{\textit{Abstract Classes}} are classes in which we don't really instantiate any object, but we use it 
+as a base class to derive classes from. If we declare one or more pure virtual functions, then the class is an
+abstract or pure virtual class.
+
+We declare a pure virtual function by adding a "=0" \textit{pure specifier}. 
+\begin{verbatim}
+virtual int foo() =0;
+\end{verbatim}
+Then what is the difference between a regular virtual and a pure virtual function? Well with a regular virtual 
+function, we give each derived class the option of overriding the function declared in the base class; however,
+with a pure virtual function every derived class is required to override the function, since it doesn't have a
+"default" base-class implemenatation in any case. 
 \end{document}
+

@@ -2,6 +2,10 @@
 \title{DSOOP Midterm Review}
 \begin{document}
 \maketitle
+\textbf{There is a difference when we declare const values.}
+For example, \texttt{const int* ptr} indicates the value of the integer to which ptr points to cannot be changed.
+On the other hand, \texttt{int * const ptr} indicates that the integer to which ptr points to cannot 
+be changed.
 \section{Classes}
 A \textbf{\textit{class}} is a collection of related functions centered around an \textit{object}, and operates
 on \textit{member functions} , which operate on items within that object.
@@ -273,5 +277,60 @@ it, bad things will happen.
 
 To avoid this, we can declare a base class destructor and declare it virtual. If we do so, then the derived
 class destructor will be called when we want to destroy a derived class object with a base class pointer.
+\newpage
+\section{Templates}
+What are templates? They basically allow us to call functions with different types. For example, a templated
+\texttt{print()} function might allow us to call by passing an int argument or a char, etc...
+\subsection{Templates and header files}
+
+In c++, both the declaration and function definitons need to appear in the same source file as they are declared.
+For this reason, most templates are ussually declared in header files and are usually defined there too. 
+\textbf{They are not split into CPP and h files.}
+
+Why? When we are compiling the c++ file where we use the template class, at compile-time we need to create 
+the implementation for the particular type. We can't create another file because we need to know what type 
+in particular is gonna be used, and this isn't possible if fies are made aware of each other until link time.
+
+Furthermore, we need templates if we are performing the same function on different types of data, and thus
+want to reduce the code we need to write. A template declaration could look like: 
+\begin{verbatim}
+template<typename T>
+class foo{
+	/*Class members and member functions defined*/
+};
+\end{verbatim}
+The typename keyword in the example is a stand-in for any fundamental or user-defined type(int, char...).
+
+We can think of writing template functions as writing multiple overloaded functions only once. Because different
+versions of the funciton work with different types, the compiler will write different versions depending 
+on which one it needs. Then, using overload resolution, the compiler will determine which function to 
+call. 
+
+C++ provides default template functions to use as class objects. We can understand most data structures as 
+some type of parametrized template function, which can contain data  elements of different types.
+
+When defining a member function outside the class definition, we always need to include the type in the 
+class' name. For example, a member function foo that returns an object reference would look like: 
+\begin{verbatim}
+template<typename T>
+T& class::foo<T>(...){
+. . .
+}
+\end{verbatim}
+We can also specify default template parameters, and then if no type is specified, it will defauld to a 
+certain type. 
+\begin{verbatim}
+template<typename T>
+T& class::foo<T = string>(){
+	...
+}
+\end{verbatim}
+The above will default to a string if there is no type specified in the initialization in \texttt{main}.
+
+It might also be in our best interest to specify the size through a parameter, to avoid some of the 
+compile time overhead of the calls.
+\subsection{Templates and Inheritance}
+Template classes can inherit from regular, normie classes in several ways. If we declare a template class, 
+we can then have another class inherit from it for a certain type. 
 \end{document}
 

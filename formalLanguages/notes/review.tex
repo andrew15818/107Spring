@@ -100,4 +100,19 @@ means that if the current state in the control unit is $q_1$ and an input symbol
 is b, then either of two transitions can happen. We can either go to ($q_2$, cd), in which case the control unit will move to 
 state $q_2$, and b is replaced on top of the stack with cd; or, we could have $q_3$ be the next input in the control unit and b
 removed from the top of the stack, with no replacement string.
+\section{Pushdown Automata and Context-Free Languages}
+Our goal is to prove that for every context-free language there is a non-deterministic pushdown automata that
+accepts it. To simplify the process, we can sssume the language is presented in Greibach Normal Form (or by 
+keeping the terminals on the right side and the current state too.
+
+An argument in Greibach Normal form is of the form:
+\centerline{A$\rightarrow$ bC}
+\centerline{\textbf{Theorem 7.1}}
+For any context-free language L, there exists a non-deterministic finite accepter M such that
+L=L(M)
+
+To use poushdown automata and context-free languages, we nee to make a construction where every ipnut symbol in
+the input string either adds a single symbol to the stack or removes a single symbol from the stack.
+\centerline{\textbf{Theorem 7.2}}
+If L=L(M) for some npda M ,, then L is a context-free language.
 \end{document}

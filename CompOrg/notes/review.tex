@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[margin=0.5in]{geometry}
+\title{Computer Organization Notes}
+\begin{document}
+\section{3.6 Parallelism and Computer Arithmetic: Subword Parallelism}
+As transistors became more available and accessible, we naturally became more interested in developing 
+new functionality for computers. The ability to process other types of data such as video, graphics and
+audio, we would need more than 32 bits to interpret. With the new instruction sets, we can operate on
+different quantities of bits within a word. For example, traditionally colors and graphics  was represented
+with 8 bits. Then, combined with sound options, which we can represent with 16 bits.
+
+For example, the new ARM architecture allows 256 bytes worth of new registers. We can view them as 8 byte
+registers, in which case we have 32, or 16 16-bit registers. This ability to perform multiple operations at the 
+same time is called \textbf{subword parallelism}.
+\section{3.9 Fallacies and Pitfalls}
+\subsection{Since shifting left multiplies by two, shifting right divided by two}
+
+This is not always the case. When we shift in values to the most significant bits, we usually will shift 0s.
+This might happen when the sign bit is negative, i.e. when we are shifting in a positive sign bit for a number that
+is negative. However, even if we try to extend the sing bit, it might lead us to smaller errors but errors nonetheless.
+\subsection{Floating-point addition is not associative}
+Floating-point additition is not associative, especially when we add two large numbers with a small one. Because the
+scientific might not change when we add a small number, if we add a small number it might not make much of a difference.
+\subsection{Parallel execution strategies that work for integer data types also work for floating-point data types}
+Because integer addition is associative and floating-point addition is not associative. Thus when we rewrite a 
+program to run in parallel instead of sequentially, the answer might not be the same.
+
+Thus prgrams even with the same inputs might not produce the same results as code that was run in parallel.
+\subsection{THe MIPS instruction add immediate unsigned \texttt{addiu} sign-extends the 16-bit immediate field}
+Because this instruction is used for adding unsigned integers,  it really is not that necessary to sign-extend the
+number.
+\subsection{Only  theoretical mathematicians care about floating-point accuracy}
+The Intel Pentium in 1994 had a buf where some of the bits in floating point arithmetic would be wrong occasionally.
+What would happen is that floating point division would sometimes return a wrong bits. This was due to incorrect
+lookups in the programmable logic array. Thus, values that were supposed to return a +2 would return a 0. In using 
+the SRT algorithm for division, it would use a lookup table based on the dividend and divisor. This badly programmed
+lookup table is what caused the incorrect values to be retrieved. Only a few of the total entries were even faulty,
+5/1066 entries.
+\textbf{The concept of the stored program indicates that all bit patterns are essentially meaningless, and can mean 
+many different things depending on how they are interpreted.}
+\newpage
+\section{Chapter 4: The Processor}
+\subsection{4.1 Introduction}
+\end{document}
+

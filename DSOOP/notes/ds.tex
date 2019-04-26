@@ -1,9 +1,35 @@
 \documentclass{article}
+\usepackage[margin=0.5in]{geometry}
 \title{Data Structures}
 \begin{document}
 \maketitle
+\section{Elementary Data Structures}
+\subsection{Stacks and Queues}
 Stacks and queues are \textit{dynamic} data structures in which we are constantly modifying the 
 elements of a partiular set. In a stack, if we want to remove an item, we ususally remove the 
 last element in the stack, and we call it a \textit{last-in-first-out} type of  data structure, 
 since the last element to ocme in is the furst element we remove.
+\subsubsection{Stacks}
+As mentioned, stacks are \textit{first-in-first-out} data structures, which means that only the 'top' element
+is accessible at any given time. The operations we may perform are all in O(1), meaning that they are constant
+time operations. These include:
+\begin{enumerate}
+		\item{\texttt{Push(S,value)}}: When we push a value onto the stack, we are adding an element to the array 
+				and moving the \texttt{S.top} attribute, increasing it by 1.
+		\item{\texttt{Pop()}}: When we pop an item, there is no need for an argument. We just reset \texttt{S.top}
+				down by 1, and potentially overwrite the data item when we have to.
+\end{enumerate}
+Essentially, a stack behaves like an array with n element, and we can only use the topmost one. If the top value
+exceeds n, we say that \textbf{stack overflow} (ayyy lmao)has occurred. The opposite, when  we try to pop an 
+empty stack, we say that \textbf{stack underflow} has ocurred.
+\subsubsection{Queues}
+For a queue, we can perform similar operations to a stack, except that they have different names. For example, an insert
+operation is called \texttt{enqueue}, and a delete operation is called a \texttt{dequeue}.
+
+We can compare a queue to a line of customers, where the first one in line is the first one to proceed. The elements all
+come into the back of the queue, and elements are only taken out of the front, or \textit{head}. 
+
+Another distinctive feature of queues is that the elements 'wrap around', that is, if the queue goes to the end of the 
+array, the next element will be arr[0]. When the tail = head -1, the queue is full, since it wrapped around to the other
+side and will interfere if it grows any more.
 \end{document}

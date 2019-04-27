@@ -41,5 +41,58 @@ many different things depending on how they are interpreted.}
 \newpage
 \section{Chapter 4: The Processor}
 \subsection{4.1 Introduction}
+All the different types of commands that we have looked at do essentially the same things. We first have to fetch
+the instruction from memory and load it. Then, we have to decode the instruction and perform the corresponding
+operation. Then, for all instructions (exept jump), we have to use the main ALU. Depending on the opcode and
+function code, we can trigger a specific operation to occur. If the command is not a branch or jump instruction,
+we incremement the PC by 4 to go to the next instruction.  In our diagram, we also have a \textit{control unit},
+whcich determines the output to the control lines of various parts of our CPU, such as multiplexors and ALU.
+
+The control unit takes the instruction as input.
+\section{4.2 Logic Design Conventions}
+To review: when we are talking about circuits, we can talk about either \textit{combinational} and 
+\textit{sequential} circuits. The difference is that the \textit{combinational} circuits depend
+only on the current input, whereas \textit{state} circuits or sequential circuits ahve some sort of memory 
+component and an use it as an input to the next instruction.
+
+An example of one of these circuits is a \textit{D-flip-flop}, where the inputs are just the value to be written
+and the clock. Why do we have the clock as input? It is essentailly because we only want these operations to 
+happen when the clock becomes positive. The output at any given time is the previous value.
+\subsection{CLocking Methodology}
+A clocking methodology refers to the period of time during an operation where we can read and write. If we 
+could read and write data at the same time, then the output might be unpredictable.
+
+Thus an \textbf{\textit{edge-triggered methodology}} would allow us to write a value to a register, send it 
+through a combinational circuit, and receive the output all in the same cycle. The inputs for the logic 
+elements are mostly 32-bits, since that is the size of inputs that our processor accepts.
+\section{4.3 Building a Datapath}
+The way to determine the next instruction is by using the PC, and use an ALU(which only performs add) to 
+find the next instruction. Then, we need to select which operation with a multiplexer, because if it is 
+a compare insrtuction, we mgiht have to select that, else we just increment the PC by 4.
+
+For R-type instructions, we have a \textit{register file}, a state element which contains the 32 general 
+purpose registers. We then just specify the number of the register to operate on. We will need an ALU to 
+work on it though. The R-type instructions require that we work on 3 registers (read 2 and write to 1). We
+then need to pass them all as inputs to the register file. The values of the registers that were read are 
+then the outputs of the register file. These values are then presumably passed to the main ALU to be operated on.
+
+Since the write control signal is edge triggered, will it be triggered automatically by the main control unit?
+It would make sense, since all R-type instructions require a write to happen at the end of the instruction.
+
+
+For a load instruction of the type \texttt{lw \$t1, offset\_value(\$t2) }, we need to add the signed field of the
+offset value to the base register, \$t2 in this case, to the offset field in the intruction. For loads, we need
+to then move the instruction into the register specified in the first instruction. When we move some data into
+a register, we then have to sign extend, or copy the most significant bit in the field all the way to the end
+of the register.
+
+Then we move on to \texttt{beq}. Again, these instructions have three arguments. There are the two registers
+that need to be compared for equality. The offset in the field is then added (or subtraced, since it is signed) 
+to the address of the current branch instruction. This new address to jump to is called the \textit{branch 
+target address}.
+ 
+We need to remember that since we are using the PC as the base address, we are actually using the current PC+4
+in our calculations, since we perform that addition in the fetch part of the cycle. Using the ALU, we need 
+to check for the equality of the two registers.
 \end{document}
 

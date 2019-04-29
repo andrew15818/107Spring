@@ -94,5 +94,77 @@ target address}.
 We need to remember that since we are using the PC as the base address, we are actually using the current PC+4
 in our calculations, since we perform that addition in the fetch part of the cycle. Using the ALU, we need 
 to check for the equality of the two registers.
+\subsection{ Creating a Single Datapath}
+Essentially to combine all the different segments we have needed, we use \textit{multiplexors} to select only 
+one output depending on a certain input. We would use multiplexors to select just one input for the ALU,
+for example to implement the R-type instructions. More specifically, whenever we had to select from 
+multiple inputs, such as memory operands and values decoded from the instruction, we would use a multiplexor
+to feed the input to the ALU.
+\section{4.4 A Simple Implementation Scheme}
+How do we select the values to be used by the ALU? It depends on the function field of the instruction. Because
+we need to determien the operation to be performed by the ALU, we would need a separate \textit{control unit}.
+The job of the control unit is to select one operation to be performed by the ALU. We use 2 bits for the ALUOP,
+which we use to tell the control unit if we want to perform a branch, R-type or load/store instruction.
+
+Based on that info, we then (in the case of R-Type operations add,sub,and, or,slt) would need the remaining
+6-bit \textit{funct} field found in the instruction. We map the combination of bits to the ALU control input, 
+which will go directly to the register. To turn the inputs into gates, we can construct a truth table for the 
+inputs. Combining the opcode and funct fields give us a total of 
+\begin{equation}
+		2^{8} 
+\end{equation}
+possible inputs. However, most of these inputs are implemented as \textit{don't care} conditions, so we don't 
+take them into consideration.
+
+When parsing or decoding the opcode, we fortunately look at the same format regardless of instruciton. The first
+4 bits of all different instruction types are the opcode, so we do not really have to imiplement more hardware
+becuase \textit{simplicity favors regularity} :).
+
+When we implement the control unit, we will have to impement multiplexors wheneve rwe identify that we need to 
+select one input out of many. For example, if we know that there are multiple possible inputs in the 
+
+Let's think about how different instruction types are implemented, or what steps they go through:
+
+1. R-type instructions
+\begin{enumerate}
+		\item{\textit{load value}}: First, we would load the instruction that is specified by the PC.
+		\item{\textit{decode, increse PC}}: Next, we pass the rs,rd,and rt values to the register file.
+				Meanwhile, we add 4 to the PC and make that the address of our next isntruction. We also 
+				check the opcode and funct values and pass that as ALUsrc.
+		\item{\textit{carry out the calculation}}: Based on that info, we already have the proper ALU control 
+				input, so we pass the rs and rt to the main ALU, and with the ALU control input, carry out
+				the desired operation.
+		\item{\textit{store value in register}}: Since we are not writing to memory, the write enable will be 
+				disabled, and we skip the memory area entirely, and write the result to the specified register
+				in the register file.
+\end{enumerate}
+ 
+ \textit{REMEMER}: The wire ALUSrc determines if we will use the the value in the register as the second input 
+ or if we will use the address and preform some arithmetic on it. This is independent from the ALUOp, which
+ feeds the conrol unit and lets it know what to do.
+
+ For a load instruction,which again is of the form \texttt{lw \$t1, offset(\$ t2)} , we can think of the order of execution as :
+ \begin{enumerate}
+		 \item{\textit{Fetch instruction, increment PC}}: Same as before, we don't need to use the memory address
+				 as the next PC, so we can directly increment by 4.
+		 \item{\textit{Add offset value to base address}}: Since in the instruction we specify that the value
+				 to be loaded as an offset in the register, we add them in the ALU. However, we first need
+				 to shift the base address by 2 and sign-extend the rest. This is the final value we add to
+				 the base address.
+		 \item{\textit{Write value to register}}: When we finally add the offset to the base address, we need
+				 to write the value to the register in the register file, since we would like to use it
+				 in later calculations.
+ \end{enumerate}
+Lastly, for the \texttt{beq} isntruction, which is of the form \texttt{beq \$t1, \$t2, offset}, we perform 
+the instructions in a simiar manner to R-Type instructions except with the result of the ALU operation.
+\begin{enumerate}
+		\item{\textit{Fetch the instruction, increment PC}}: We always fetch the instruction and increment the
+				PC, but for branch instructions we need to determine which addresses we will use.
+		\item{\item{Subtract the two numbers}}: Again with the sign=extended sign bits, we check the difference
+				of the two numbers. If they are equal, the \texttt{ZERO} otuput wire will be asserted. If the 
+				branch wire is also asserted from the Control unit, then we will use the target address
+				specified in the instruction as our new PC address.
+\end{enumerate}
+For the beq instruction, we don't use any elements from the data memory part of the unit.
 \end{document}
 

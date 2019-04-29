@@ -31,5 +31,95 @@ come into the back of the queue, and elements are only taken out of the front, o
 
 Another distinctive feature of queues is that the elements 'wrap around', that is, if the queue goes to the end of the 
 array, the next element will be arr[0]. When the tail = head -1, the queue is full, since it wrapped around to the other
-side and will interfere if it grows any more.
+side and will interfere if it grows any more. This is because we are constantly removing elements from the 
+head of the queue, so if we didn't implement this, our queue would be decreasing in size every time 
+we dequeue.
+
+For queues, because of its FIFO property, whenever we \texttt{dequeue}, the first element in the queue is
+removed, similar to the first customer in a line that proceeds to the counter. Similarly, the element that 
+is \texttt{enqueued} always goes at the tail of the queue. 
+\subsection{10.2 Linked Lists}
+A \textbf{\textit{linked list}} is a container-type data structure in which the elements are categorized not
+as indices in an array, rather each element, or \textit{node}, has a pointer to the next object. This means
+that linked lists don't need to be of a specified size, they can expand and contract dynamically.
+
+This would be an example of a singly(?) linked list. A \textit{\textbf{doubly linked list}}, however, contains
+a pointer to the next and previous element in the list respectively. At first, the head and the tail both 
+point to the same element. The first node, n1, should be such that \texttt{n1.prev =null}. This would
+let us know that a node in the list is a header. For a tail node, we would only need to chech its \textit{next}
+pointer, since the tail pointer should be null as well.
+
+For an unsorted list, if we want to search for a specific element, we would just have to perform a linear search
+for our desired element.
+
+Using a \textit{sentinel} object might help us simplify boundary condition checking. We can place another
+object \textit{before} the head object and we then have \texttt{nil.next} point to the head object. the object
+\texttt{tail.next} could also point to the NIL object. The main reason to even use sentinels is to 
+simplify the code maybe within a loop, becuase they don't do that much for reducing complexity.
+Also, they take up extra space, so if we are using linked lists with objects and have several of them, it might
+be better to not use sentinels.
+\subsection{10.3 Implementing Pointers and Objects}
+This section covers mostly the pointers implementation in objects that do not support them. Suppose we wanted
+to implement a linked list in this way. We could do it with three arrays: one for the key, one for the next and prev. For the next and prev arrays, we have the vaue in the array element i be the index that it corresponds to 
+in the key array. For example, the ith value in the prev array is the index of the previous element, so if
+prev[i] =5, that objects prev is the one in the 5th index. However, it seems that this approach is very 
+limited?
+\subsection{Representing Rooted Trees}
+Trees can be thought of as an extension of the idea of a linked list. We can have 3 attributes per node. We 
+need a pointer to the parent of the node; if \texttt{x.parent} = NIL, then this is the root of the tree.
+Considering only binary trees, they can only have two children.
+
+However, we can still implement trees with an arbitrary number of children. We use the \textit{left-child
+right-sibling representation}. This combines the idea of a tree and linked list. What this means is that
+we have a pointer to the leftmost child. Then, we have a pointer to \texttt{x.right}, which is a pointer
+to the right sibling. Then, we have the leftmost pointer serving as the head of the list and pointing
+to every right sibling.
+\section{Hash Tables}
+A \textit{\textbf{hash table}} is a data structure that mimics a 'dictionary', or one in which a \textit{key}
+maps to an array index. However, unlike an array where we provide the index directly, here we 
+\textit{calculate} the corresponding array index based on a key value. Depending on the function we use,
+there might be more or less collisions, or what happens when two different keys map to the same array
+index.
+\subsection{Direct-address tables}
+We can use an array, called a \textit{\textbf{direct-address table}}, to keep track of the data we want to 
+associate with the key k. Each element in the array maps to a certain key.
+\subsection{Hash Tables}
+With direct address tables, we were calculating the value in a table with |U| values, one for every element 
+in the universe of possible keys, while really only using |K| values. Instead, we can get away with using a 
+much smaller array, and calculating the index necessray for an element. The \textbf{hash function} maps the
+entire universe into an array of size n. Since |U|>|M|, there has to be at least one collision (pigeonhole
+principle anyone?). One way we can deal is by having a pointer in collisioned indexes to a list of 
+elements that map to that same index. This is called \textbf{\textit{chaining}}.
+
+When one or more values map to the index given by h(k), we create a linked list at that index; or rather, we 
+have a pointer to the head of a linked list. Then, if we make it a doubly-linked lsit, deletion can run
+more efficiently. For search , we could just do a linear search starting at the head, if we just insert 
+an item at the end every time. 
+
+Supposing we have a hash table T with a n elements currently being stored and size m, the 
+\textit{\textbf{load factor}} $\alpha$ is the ratio n/m (how 'full' the table currently is ?). The load 
+factor can vary between 0-1. In reality however, the performance of our hash table depends on the 
+function we use to hash the values. 
+
+$n_{j}$ can be used to describe the length of the list at index h(k). The expected length of the list is 
+E[$n_{j}$] = $\alpha$.
+
+\textbf{\textit{Theorem 11.1}}
+
+In a hash table where collisions are resolved by sorting, a search takes on average $\Theta$($\alpha$ +1).
+
+\textbf{\textit{Proof}} The time it takes to search for an index k, if there is nothing in the index, is constant.
+If there is a list in the index, the expected length of the list is $\alpha$, therefore the worst-case
+time for searching the list is O(n). This is all assuming that every element in the array is equally likely 
+to be chosen given the original key.
+\subsection{Hash Functions}
+A good hash function obviously minimizes the probability that two keys map to the same index. We encourage 
+simple uniform hashing, since the hash value calculated for every index should be independent of the key 
+itself. One popular way is the \textit{division method}, in which we take a (unrelated) prime number, and 
+calculate the index by dividing the index and the prime number, then taking the floor of the number. 
+
+Representing the keys as natural numbers would allow us to create functions that operate on them in some way.
+For example, translating the number into a certain radix(base). 
+\subsection{Division Method}
+The simplest way of calculating the 
 \end{document}

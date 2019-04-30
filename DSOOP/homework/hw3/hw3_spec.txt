@@ -1,0 +1,31 @@
+OOP Homework #3 
+
+Introduction
+In this homework, your goal is to implement a very simple image processing program. The program will read a bitmap image and then output its brighter or darker version. Users should be able to specify the brightness factor when using the software. For example, they can type the command line
+
+program.exe input.bmp output.bmp 1.2
+
+to multiply the color of the image by 1.2. It is noting that the color of each pixel is stored by an unsigned character format. The program will probably issue an overflow exception during the process. You have to apply the try catch statement to handle such an overflow exception. Specifically, your program has to set the value to 255 if it is larger than 255. In addition, it has to print an overflow message, such as "Pixel (x, y) is overflow." , on the screen line by line if the overflow occurs.
+
+Overall, in this homework, you will practice skills of unformatted I/O and exception handling. The bitmap format can be obtained from https://en.wikipedia.org/wiki/BMP_file_format . For simplicity, we don't consider the color palette, which will make the program much easier. There are no clear rules in your program. You can design your program architecture on your own, just be sure to handle the overflow exception correctly.
+
+Requirements
+ Implement a simple image processing program, which can read a bitmap image and then output its brighter/darker version.
+ Your program should be able to process the statement like program.exe input.bmp output.bmp 1.2
+ Your program should handle the overflow exception correctly. Specifically, it has to print the message "Pixel (x, y) is overflow." on the screen line by line and set the value to 255 if the overflow problem occurs. In addition, the try catch statements should be used.
+
+Grading
+We will apply several images and commands to test your program. Your score will be determined according to the number of test data your program can process, and the number of requirements it fulfills.
+
+Submission
+Upload the files to e3: main.h, main.cpp
+
+Deadline
+ Normal deadline: 2019/5/13 (Mon.) 23:59:59 
+ Second deadline: 2019/5/20 (Mon.) 23:59:59 [WITH PANALTY!] 
+
+Penalty
+ Late submission (after 5/13 and before 5/20): 30% discount (your_score = original_score*0.7) 
+ Copy code from others/internet: you will get a 0 in this homework
+
+If you have any problem about this homework, contact us through e3.

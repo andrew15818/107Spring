@@ -144,6 +144,7 @@ Let's think about how different instruction types are implemented, or what steps
  feeds the conrol unit and lets it know what to do.
 
  For a load instruction,which again is of the form \texttt{lw \$t1, offset(\$ t2)} , we can think of the order of execution as :
+ 2. Load/store instructions
  \begin{enumerate}
 		 \item{\textit{Fetch instruction, increment PC}}: Same as before, we don't need to use the memory address
 				 as the next PC, so we can directly increment by 4.
@@ -166,5 +167,55 @@ the instructions in a simiar manner to R-Type instructions except with the resul
 				specified in the instruction as our new PC address.
 \end{enumerate}
 For the beq instruction, we don't use any elements from the data memory part of the unit.
+
+If we try to implement jump instructions, the main difference is that we compute the PC in a different way. We still
+add 4 to the orginal PC and then we concatenate. The things we do to calculate the (new)PC: take the most 
+significant 4 bits of the PC, the next 26 bits are the immediate bits, and add two 0s at the end (remember that
+to indicate to jump a certain number of \textit{words} instead of bytes, we multiply by 4).
+
+Implementing an instruction set where every instruction takes the same amount of time is inefficient because
+the longest instruction will determine the clock time. Some operations don't use all of the modules in our
+diagram, so it would be unnecessary for them to take the same amount of time as a longer instruction.
+\subsection{4.5 An voerview of Pipelining}
+To understand pipelining, we can think of a process repeating the instructions. If we have to wait for an entire
+instruction to finish, then we would be wasting a large amount of time. The idea of \textit{\textbf{pipelinging}}
+comes in. Pipelining is the idea of executing multiple insrtuctions at the same time. Pipelining does not 
+make the execution of a single instruction faster, rather it makes the amount of instructions executed per 
+unit time more.
+As a reminder, the MIPS instruction set traditionally has five instruction stages:
+\begin{enumerate}
+		\item{Fetching the instruction from memory.}
+		\item{Locate the required registers in register file, decode the instruction}
+		\item{Actually operate on the instructions in the ALU}
+		\item{access the data memeber in data memory}
+		\item{write the instruction to memory}
+\end{enumerate}
+After we fetch the instruction for the first instruction, we can in theory fetch the next instruction in memory and
+so on. Thus we always have the stages in the pipeline operating on some operands or another.
+
+All stages in the pipeline take a single clock cycle, so the clock time should be enough to accomodate the slowest
+stage in the pipeline individually, rather than the entire instruction as a whole.
+
+Immeditely after we fetch the isnruction using the PC, we can move on to the next instruction. This means that
+the time we need to wait between insructions is just equal to the time of the first stage, rather than the sum
+of all the stages. The improvement with pipelining would be approximately equal to:
+\begin{equation}
+		total\_time=time\_between\_instructions * number\_of\_instructions
+\end{equation}
+Processing the MIPS instruction set is considerably simpler than x86 because the instructions are all the same 
+length and the instruction format has some things in common accross all different instruction types. 
+\subsubsection{Pipeline hazards}
+A \textit{\textbf{structural hazard}} would refer to the inability of the hardware to support a certain
+combination og instructions.
+
+There is also the idea of \textit{\textbf{data hazards}}, where an instruction cannot be executed in a 
+single cycle because the data which it requires is not yet available for use. For example, if we try to 
+use the result of an arithmetic operation in the instruciton immediately following it we might have a 
+data hazard because the data won't be written into ins appropriate register until the last stage, which
+is after the stage where we would need it in the next instruction.
+
+How can we deal with the data hazards? One way would be to have the result from the ALU directly go to the next
+step. We could store it ina temporary buffer and then make it available to the next instruction. This is called
+\textit{\textbf{forwarding}} or \textit{\textbf{bypassing}}.
 \end{document}
 

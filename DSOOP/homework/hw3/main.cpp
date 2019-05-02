@@ -3,6 +3,7 @@
 #include<stdexcept>
 #include<fstream>
 #include<cstdint>
+#include<cctype>
 #include"exception.h"
 #include"bmp.h"
 //#include<stderror>
@@ -25,8 +26,8 @@ int main(int argc, char *argv[]){
 	
 	//trying to open the respecitve file
 	try{
-		BMPFile file1(in_file, "read");
-		BMPFile file2(out_file, "write");
+		BMPFile hola(in_file);
+	//	BMPFile file2(out_file, "write");
 
 	}
 	catch(const fileOpen& file_exception){

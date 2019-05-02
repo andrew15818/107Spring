@@ -1,24 +1,26 @@
 #ifndef BMP_H
 #define BMP_H
-//define structures for headers
+#include<iostream>
+#include<fstream>
 /*So, we could only the output file until we directly write to it to simplify befinnign code*/
 //TODO:figure out how to properly take in and assign the header fields from input file.
+//Maybe we could parse the relevant header values in the constructor for the file.
 struct BMPHeader{
-	uint16_t signature; //should be 'BM'
-	uint32_t fileSize; 		  //file size in bytes
-	uint32_t reserved;		  //unused (for padding to multiple of 4 bytes?)
-	uint32_t  dataOffset;	  //offset to actual raster data (how far to pixel data begins)
-	uint32_t size;			  //size of the header info (should be 40 bytes)
-	uint32_t width;			  //width of the bitmap
-	uint32_t height;		  //height of the bitmap
-	uint16_t planes;	  	  //number of planes
-	uint16_t bitCount;  	  //number of color bits per pixel
-	uint32_t compression;	  //type of compression used
-	uint32_t imageSize; 	  //size of the image in bytes after compression
-	uint32_t xPixels;		  //horizontal resolution
-	uint32_t yPixels;		  //vertical resolution
-	uint32_t colorsUsed; 	  //number of colors used
-	uint32_t importantColors; //number of important colors (?)
+	unsigned short int  signature; //should be 'BM'
+	unsigned int fileSize; 		  //file size in bytes
+	unsigned int  reserved;		  //unused (for padding to multiple of 4 bytes?)
+	unsigned int  dataOffset;	  //offset to actual raster data (how far to pixel data begins)
+	unsigned int size;			  //size of the header info (should be 40 bytes)
+	unsigned int width;			  //width of the bitmap
+	unsigned int height;		  //height of the bitmap
+	unsigned short int planes;	  	  //number of planes
+	unsigned short int bitCount;  	  //number of color bits per pixel
+	unsigned int compression;	  //type of compression used
+	unsigned int imageSize; 	  //size of the image in bytes after compression
+	unsigned int xPixels;		  //horizontal resolution
+	unsigned int yPixels;		  //vertical resolution
+	unsigned int colorsUsed; 	  //number of colors used
+	unsigned int importantColors; //number of important colors (?)
 };
 /*declare file and read it in its own class*/
 class BMPFile{
@@ -31,8 +33,8 @@ class BMPFile{
 		double mult_factor;
 		void setHeaders();
 	public:
-		BMPFile(std::string file_name, std::string type);
-		~BMPFile();
+		BMPFile(std::string file_name);
+		//~BMPFile();
 		void open(); 			  //open the input file for reading/writing
 		void read();			  //assign values to headers and read file contents
 		void writeToOutFile(const BMPFile&, double mult_factor); // pass each byte* mult_factor into out file	

@@ -270,5 +270,24 @@ Given the diagram for the Datapath, we can split it into the 5 stages. All the
 operations move the information 'forward', or to the next area in the cycle, 
 except for updating the PC and writing the result of calculations into the 
 register file.
+
+The figure in the book shows the intruction datapath divided into the segments. In order to be
+able to use and store the results after every stage, we insert a register after every output 
+operation.
+
+The main idea of this section relates to the fact that we can set multiple instructions to occur
+simultaneously. This may raise some issues in the instructions that come after it.
+\subsubsection{Pipelined Control}
+For pipelining instructions, similar to the way we implemente a control unit for the simple 
+datapath, we would need a control unti for the pipelining. Since every stage is active during 
+every clock cycle, we need to have conrol wires for the stages in the pipeline where we want 
+to write. For this datapath, we could split the control wires into 5 groups:
+\begin{enumerate}
+		\item{\textit{\textbf{Instruction Fetch}}}: Since in every instruction we operate on
+				the PC and retrieve the current instruction address, any control wires to the IF
+				stage would always be asserted.
+		\item{\textbf{\textit{Instruction decode/register file read}}}: Again, because we use these
+				instructions in every time, then these wires will always be asserted.
+\end{enumerate}
 \end{document}
 

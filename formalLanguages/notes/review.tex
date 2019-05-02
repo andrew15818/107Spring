@@ -115,4 +115,61 @@ To use poushdown automata and context-free languages, we nee to make a construct
 the input string either adds a single symbol to the stack or removes a single symbol from the stack.
 \centerline{\textbf{Theorem 7.2}}
 If L=L(M) for some npda M ,, then L is a context-free language.
+.
+.
+.
+\newpage
+\section{Prooperties of context-free languages}
+\subsection{Two pumping lemmas}
+For context-free languages, we cn also have  a pumping lemma, which repeats the same feeling as the original
+and says that given a string of certain length, given a length large enough, then there is gonna be a state
+that occurs twice.
+\section{Turing Machines}
+\subsection{Introduction}
+To visualize Turing machines, we need to imagine a control unit that is in some predefined state. The
+control unit has a head which reads information stored on a tape, which contains the instructions. 
+Similar to pushdown automata, where we defined the transition function to take into account the 
+current state and symbol being read, and then stored it onto the stack, here we define Turing machines
+which can accept non-context-free languages (as well as their subsets).
+
+The tape's instructions are bounded by blank space, and as a result we must temrinate whenever we 
+reach a blank state and wish to make a move. The head can move either left or right depending on the
+transition fucntion specified for that particular state.
+
+Using Turing machines, we can claim that any problem that is computable can be computed by a 
+Turing machine.
+\subsection{Combining Turing  Machines for More Complicated Tasks}
+Basing ourselves on the simple instructions that we used in the previous secitons, we can now 
+connect different parts of the machine by sending start signals. Suppose we wanted to check a certain
+condition and then act on that information. We could have three parts: one that compares the condition
+to be checked, another to act on it if it is true, and likewise if it is false.
+
+If we use descriptions that resemble a high-level programming language, we can use a single statement
+that represents many lower level instructions. We can even define \textit{subprograms}, which would 
+functionally resemble functions. They perform a certain small operation using smaller Turing machines.
+
+Similar to functions in higher level languages, we need a mechanism to return to the current state in
+the main program once the subprogram has finished executing. We would also need to have an area in the 
+memory where we could place our arguments, if we have the main machine A call the subprogram B. We label
+a new area T, which is separated from A and B (to avoid interference). When A calls B, it moves its 
+state and arguments to T, from which B reads the information and performs the calculation.
+\subsection{Turing's Thesis}
+As introduced, Turing machines seem to be able to be combined into more powerful descriptors, using 
+subprograms and other mechanisms it might be easy to claim that a regular Turing machine is just as
+powerful as a 'regular digital computer'. However, since we cannot easily define this term, we can try
+and look at the problem from a different way.
+
+In theory, if our claim was true, then we should be able to make a Turing machine that is able to 
+compute any operation that we are presented with (regardless how tedious it might be). However, to 
+probe this, we would need ot write a Turing machine to check every possible problem. Or, there 
+would have to be a problem for which we cannot make a Turing machine which is computable. 
+
+Because it has been this long and no such problem has been brought forth, we can claim (circumstantially)
+, that our claim holds. Thus the \textit{Turing thesis} came in the 1930s. This thesis claims that any 
+computation that can be carried out by mechanical means can be done by a Turing machine.
+
+The thesis does not represent a definition, (mechanical means ??)rather, it presents an assumption that
+something is solvable by computational means if and only if it can be solved by a Turing machine. We might
+take the thesis as the fundamental law of computer science, because it fits with our model of computation, 
+and it has proven resilient enough to be considered correct. 
 \end{document}

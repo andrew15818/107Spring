@@ -211,11 +211,64 @@ combination og instructions.
 There is also the idea of \textit{\textbf{data hazards}}, where an instruction cannot be executed in a 
 single cycle because the data which it requires is not yet available for use. For example, if we try to 
 use the result of an arithmetic operation in the instruciton immediately following it we might have a 
-data hazard because the data won't be written into ins appropriate register until the last stage, which
+data hazard because the data won't be written into its appropriate register until the last stage, which
 is after the stage where we would need it in the next instruction.
 
 How can we deal with the data hazards? One way would be to have the result from the ALU directly go to the next
 step. We could store it ina temporary buffer and then make it available to the next instruction. This is called
 \textit{\textbf{forwarding}} or \textit{\textbf{bypassing}}.
+
+If we did not have the abiltiy to forward or bypass, we would need to stall the pipeline until all the operations
+were completed, so if there was a data hazard we would need to make the entire rest of the pipeline wait. Because
+we still can't go back in time, we could onlybe able to forward information to future stages of the pipeline. For
+example, we would not be able to send the result of a memory instruction (such as load) to the ALU, since that 
+stage happens before we have the final address. An R-type instruction immediately following a load instruction
+would definitely require stalling at least until the fourth stage in the pipeline. This specific type of 
+data hazard is called \textit{\textbf{load-use data hazard}}.
+
+A \textit{\textbf{pipeline stall}} is the process of stopping the pipeline to resolve a data hazard.
+
+The third type of hazard is called \textit{\textbf{control hazard}}. A structural hazard comes arises
+when the  current instruction depends on the outcome of instructions that are still executing. For
+example, the outcome address of a branch address might not be calculated until the fourth stage, and 
+written until the 5th, so the next operation would not be able to fetch the instruction address
+in the \textit{instruction fetch} stage. Control hazards occur with branch instructions.
+
+One option would be to immediately stall upon receiving a branch instruction. Why do they happen though?
+They occur because after we fetch the instruction for the current instruction (the branch instruction)
+, we start fetching the address of the next instruction. At this moment, we cannot possibly know the
+address of the next instruction since we just started calling the registers from memory.
+
+We can try to \textit{predict} the result of a branch before it happens. What is the cost? Well, if
+you guess correctly, then there would be no cost, since the pipeline would operate as if nothing 
+happened. If you were wrong, you mgiht have to stall. A simple approach 
+would be to assume that the branch will be untaken (that there will be no branch).
+
+Therefore, \textit{\textbf{branch prediction}} is the practice of assuming a certain outcome of the
+instruction and proceed from that instead of actually waiting for the entire procedure. To do this,
+we could have rigid measures such as always assuming branches at the end of loops that go back 
+to an earlier address (beginning of loop) are always taken, however this doens't allow for
+much flexibility. 
+
+There can also be \textit{dynamic predictors}, which keep a history of recent branches and 
+whether they were taken or not taken. Then, it can adjust its assumption based on current
+behavior. The accuracy of these predictors can reach levels 90\%<.
+
+As the last part to the section. There can also be \textit{delayed branches}. When we 
+encounter a branch, we can stall until the instruction finishes calculating the next
+address. In the meantime, because there is at least one clock cycle where the pipeline
+would be stalled, we can instead insert another insrtuction that does not depend on
+the branch.
+
+\hspace{10mm}\textbf{Summary of pipelining}
+With pipelinging, we don't increase the speed of an individual instruction, but we 
+increase the amount of instructions executed in a given amount of time. This helps
+increase the \textit{throughput} of the program. There is also the idea of latency, 
+or the amount of stages between two consectutive instructions in the pipeline.
+\subsection{4.6 Pipelined Datapath and Control}
+Given the diagram for the Datapath, we can split it into the 5 stages. All the 
+operations move the information 'forward', or to the next area in the cycle, 
+except for updating the PC and writing the result of calculations into the 
+register file.
 \end{document}
 

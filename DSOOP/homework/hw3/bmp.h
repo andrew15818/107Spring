@@ -29,14 +29,12 @@ class BMPFile{
 		BMPHeader bmpheader;	
 		std::string file_name, type; //specify if we are to read or write to file
 		std::ifstream is;
-		std::ofstream os;
-		double mult_factor;
-		void setHeaders();
+		unsigned char buffer[54]; 	//going to receive our header values, then we will read from it
+		unsigned char bitmap[];
 	public:
 		BMPFile(std::string file_name);
 		//~BMPFile();
-		void open(); 			  //open the input file for reading/writing
-		void read();			  //assign values to headers and read file contents
+		void open(); 			  //open the input file for reading/writing, assign values to header
 		void writeToOutFile(const BMPFile&, double mult_factor); // pass each byte* mult_factor into out file	
 };
 #endif

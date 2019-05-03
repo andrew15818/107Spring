@@ -27,8 +27,6 @@ int main(int argc, char *argv[]){
 	//trying to open the respecitve file
 	try{
 		BMPFile hola(in_file);
-	//	BMPFile file2(out_file, "write");
-
 	}
 	catch(const fileOpen& file_exception){
 		cout<<file_exception.what()<<endl;

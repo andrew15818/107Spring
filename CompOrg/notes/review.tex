@@ -289,5 +289,97 @@ to write. For this datapath, we could split the control wires into 5 groups:
 		\item{\textbf{\textit{Instruction decode/register file read}}}: Again, because we use these
 				instructions in every time, then these wires will always be asserted.
 \end{enumerate}
+\newpage
+\subsection{Data Hazards: Forwarding versus stalling}
+Again, when we have values that have to be used by other instructions, such as the result of
+arithmetic operations, we might have a \textit{data hazard}, since the value we need in the 
+next instruction won't be available until after the ALU operation is supposed to take place.
+
+The idea qould be to send the values to the next instruction if the result from one stage is needed 
+in the calculation of another stage. We would need to check that the operand registers in the next
+instruction are not the same ones as the result register in after the EX stage.
+
+We would also need to be able to detect a potential hazard if it could occur. How could we do it? 
+Well, we could use the control signal for the registers. Also, we would need to check the state 
+of the instructions to see if a hazard could occur. For example, if we have a load instruction 
+followed by a R-type instruction, the value won't be written into the output register until after the 
+next instruciton needs it for its EX stage. Thus, we would need some mechanism to stall the 
+pipeline. We could do this by having the pipeline \textit{not} change the PC, and by setting all the
+control signals to 0. This would mean that the state would not change, as well as the instruction.
+The current PC value would continue to be read 
+
+This has the effect of delaying all instructions by at least one clock cycle, until it can resolbe all conflicts.
+When would we use register forwarding versus stalling? Well, we can use forwarding when the result of one
+operation is used as the input for the next register. However, we cannot forward when there is a load
+instruction and a logic operation in the next instruction. In the latter case, when there is the risk
+of a \textit{hazard}, we would stall the pipeline by adding a bubble, or deactivating the control 
+signals and not changing the PC register. More specifically, we would need to stall the pipeline when 
+the following instruction reads the value that was just loaded into the register.
+
+\subsection{Control Hazards}
+As we saw previously, the type of hazard that can occur when there is a branch instruction is called a
+\textit{control hazard}, or a type of hazard in which we have a branch instruction, but we don't know
+if we have to branch or not until the MEM stage, at which point the next couple instructions have
+already started to begin calculation. The ways to deal with it are not as effective as the 
+ways to deal with data hazards. There are some ways to deal with this type of incident: assuming
+the branch is not taken and dynamic branch prediction.
+
+\hspace{10mm}\textbf{Assume the Branch is not taken}
+When we assume the branch is not taken, the instructions following the branch will have to exeute normally. 
+At the end of the MEM stage, we will know if the branch is taken or not. If it is, we then will have to
+\textit{flush} the instructions following the branch.
+
+Making the branch decision faster is also possible under this scheme, since the branch address can be moved
+up. The branch conditions are usually simple ones, so with a few logic gates we could calculate the 
+result of the simple branches. However, to implement this type of change, we would need to first need to XOR
+the resiters and then 'OR al the results'(?). However, we would need to change the forwarding logic introduced
+for the ALU stage previously. If the previous ALU calculation produced one of the operands for the current 
+instruction, then a stall would be needed. However, if a load is needed right before a branch instruction,
+up to 2 stalls might be needed.
+
+Even with all its difficulties, moving the branch to the ID stage is stll an improvement, since we could 
+know the result of a branch and only have to (potentially) flush the instruction currently being fetched.
+
+\hspace{10mm}\textbf{Dynamic Branch Prediction}
+Dynamic branch prediction refers to the decision of whether or not to branch at runtime. As the pipeline 
+gets more involved, we would lose too much performance implementing a simple branch prediction scheme.
+The way we implement this type of prediciton is by keeping some sort of record, called a 
+\textit{branch history table}, in which we keep a record of whether the instruction's branch was taken 
+last time it was executed. The table is indexed by the lower order bits of the instruction, which 
+might present an instruction if two instructions with the same lower order bits are indexed in the table.
+
+As an example, in a 1-bit prediction scheme, the first and last predictions in a series of the same instructions
+will be wrong. Why? Well, suppose the instruction is taken 9 times in a row, and not taken the last time. In
+the table, the entry will be set to 'not taken' from the previous time it was not taken. Then it will be 
+predicted the next 8 times correctly and incorrectly the very last time , when we predict the branch 
+to be taken and it isnot taken. Thus the accuracy of this scheme will always fail on the first and
+last tries. How to remedy this?  We can use 2 bits to make the prediction instead of 1. Then , we only change
+the prediction in the table once our prediction has been wrong twice.
+
+To avoid the branch delay slot, which is due to the time it takes to calculate the PC, we can instead store
+the target PC in a \textit{branch target buffer}.
+
+In order to make the predictions more accurate, we can use \textit{correalting predictors}. These are 
+other additional bits of global information. We can use these bits to increase the branch prediction
+accuracy becasue it serves as adding an extra idnex bit for each branch lookup.
+
+A newer method for doing prediction involves using \textit{tournament predictors}. These predictors will 
+use different predictors for each branch then choose from the ones that have the best results.
+\subsection{Exceptions}
+An \textit{exception} is an unexpected event (such as overflow) that may arise during the execution of a 
+program. Exceptions may be caused from within the program itself. An \textit{interrupt} is an exception
+that comes from outside the program.
+
+The main thing that needs to happen when an exception occurs is that we need to first detect the 
+exception obviously, then we need to save the address of the instruction that caused the exception in 
+the \textit{Exception Program Counter}, then finally return control to the operating system for it to 
+decide how to deal with it. We also would need to specify the reason for the interrupt, which we can do 
+by placing a specific field in the \textit{Cause Register}, or we could use a 
+\textbf{\textit{vectored interrupt }}. A vectored interrupt specifies the address to which the control is 
+returned based on the reason for te exception. Based on the adress of the register on which we are 
+storing the values, the operating system can determine the cause of the exception. 
+
+How can we detectexceptions? We can think of them as anothe type of control hazard. If voerflow occurs,
+for example, we can flush the next instructions and then insert nops.
 \end{document}
 

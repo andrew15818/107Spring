@@ -25,11 +25,13 @@ int main(int argc, char *argv[]){
 	}
 	
 	//trying to open the respecitve file
-	try{
 		BMPFile hola(in_file);
+	try{
+	
 	}
 	catch(const fileOpen& file_exception){
 		cout<<file_exception.what()<<endl;
 	}	
+	hola.writeToOutFile(out_file, mult_factor);
 	return 0;
 }

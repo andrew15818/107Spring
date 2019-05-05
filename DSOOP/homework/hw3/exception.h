@@ -12,4 +12,8 @@ class fileOpen:public std::runtime_error{
 		fileOpen():
 		std::runtime_error{"Error opening file."}{};
 };
+class overflow:public std::runtime_error{
+	public:
+		overflow():std::runtime_error{"Overflow at bit "}{};
+};
 #endif

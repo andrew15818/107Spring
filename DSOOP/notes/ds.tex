@@ -121,5 +121,21 @@ calculate the index by dividing the index and the prime number, then taking the 
 Representing the keys as natural numbers would allow us to create functions that operate on them in some way.
 For example, translating the number into a certain radix(base). 
 \subsection{Division Method}
-The simplest way of calculating the 
+The simplest way of calculating the  hash function is by using modular arithmetic. since it is jsut one
+division, it might be quite fast, but wouldn't there be many collisions? If
+\begin{equation}
+		h(k) = k mod(m)
+\end{equation}
+then there are many values which would map to the same values, right? 
+\subsection{Multiplication Method}
+With the multiplication method, we multiply the key number k by the A value which is between 0 and 1. 
+Then, we multiple it by m, the table size, and take the floor part of the result.
+\subsection{Universal Hashing}
+With universal hashing, we can select from a set of functions. This would ensure that inputs cannot be 
+selected in such a way to guarantee a collission on every input. In theory, this would ensure that 
+on average we have relatively good performance. The main idea with universaltiy is that we can
+choose from a set of functions such that the probaility of two equivalent hashes is 1/m. Basically,
+our ideal is to have hash tables which behave as if they indexes were randomly chosen.
+
+Then how do we design the set of functions to be used in the hashing? 
 \end{document}

@@ -5,6 +5,7 @@
 /*So, we could only the output file until we directly write to it to simplify befinnign code*/
 //TODO:figure out how to properly take in and assign the header fields from input file.
 //Maybe we could parse the relevant header values in the constructor for the file.
+#pragma pack(push,1)
 struct BMPHeader{
 	unsigned short int  signature; //should be 'BM'
 	unsigned int fileSize; 		  //file size in bytes
@@ -22,6 +23,7 @@ struct BMPHeader{
 	unsigned int colorsUsed; 	  //number of colors used
 	unsigned int importantColors; //number of important colors (?)
 };
+#pragma pack(pop)
 /*declare file and read it in its own class*/
 class BMPFile{
 	//handle file opening directly in class functions

@@ -40,18 +40,40 @@ void BMPFile::writeToOutFile(std::string out_file, double mult_factor){
 	/*copy header to our new file*/
 	long unsigned int length = bmpheader.xPixels * bmpheader.yPixels*3;	
 	unsigned char bitmap[length];
-		
+	int currx=0, curry=0;	
 	//is.seekg(bmpheader.dataOffset,is.beg); apparently this method doesn't work
 	is.read((char*)bitmap,bmpheader.imageSize);
 	for(int i =0; i<(bmpheader.xPixels*bmpheader.yPixels*3);i+=3){
-			std::cout<<"pixel count :"<< i/3<<std:: endl;
-			bitmap[i]*=mult_factor;
-			bitmap[i+1]*=mult_factor;
-			bitmap[i+2]*=mult_factor;
-			//std::cout<<(int)bitmap[i]<<" "<<(int)bitmap[i+1]<<" "<<(int)bitmap[i+2]<<std::endl;
-			if(bitmap[i]>=255){std::cout<<"ypee"<<std::endl; bitmap[i] =255; }
-			else if (bitmap[i+1]>=255){std::cout<<"hola"<<std::endl; bitmap[i+1]=255;}
-			else if(bitmap[i+2]>=255){std::cout<<"hurray"<<std::endl;bitmap[i+2]=255;}
+			currx =i%bmpheader.yPixels;
+			curry= i%bmpheader.xPixels;
+
+			if(bitmap[i]>255 || bitmap[i+1]>255 || bitmap[i+2]){
+				std::cout<<(int)bitmap[i]<<" "<<(int)bitmap[i+1]<<" "<<(int)bitmap[i+2]<<std::endl;
+				//<<(int)bitmap[i]<<" "<<
+				//(int)bitmap[i+1]<<
+				//(int)bitmap[i+2]<<std::endl;
+			}
+				bitmap[i]*=mult_factor;
+				bitmap[i+1]*=mult_factor;
+				bitmap[i+2]*=mult_factor;
+
+		/*	
+			try{
+
+				if(bitmap[i]>255 || bitmap[i+1]>255 || bitmap[i+2]>255){
+					
+					throw overflow{};
+				}
+			}		
+			catch(const overflow& of){
+				std::cout<<of.what()<<" "<<currx<<","<<curry<<std::endl;
+				if(bitmap[i]>255){bitmap[i] =255; }
+				if(bitmap[i+1]>255){ bitmap[i+1]=255;}
+				if(bitmap[i+2]>255){bitmap[i+2]=255;}
+				
+			}
+		*/
+		//	std::cout<<currx<<" "<<curry<<": "<<(int)bitmap[i]<<" "<<(int)bitmap[i+1]<<" "<<(int)bitmap[i+2]<<std::endl;
 	}
 	os.write((char*)buffer, sizeof(buffer));	
 	os.write((char*)bitmap,bmpheader.imageSize); 

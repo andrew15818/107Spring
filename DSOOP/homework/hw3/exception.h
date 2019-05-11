@@ -14,7 +14,6 @@ class fileOpen:public std::runtime_error{
 };
 class overflow:public std::runtime_error{
 	public:
-		int x,y;
-		overflow(int x, int y):x(x), y(y),std::runtime_error{"Overflow at bit "}{};
+		overflow():std::runtime_error{"Overflow at bit "}{};
 };
 #endif

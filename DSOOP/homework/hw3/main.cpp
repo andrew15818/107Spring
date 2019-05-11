@@ -1,3 +1,4 @@
+/*Should be run using c++11*/
 #include<iostream>
 #include<string>
 #include<stdexcept>

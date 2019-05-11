@@ -6,7 +6,7 @@ BMPFile::BMPFile(std::string filename){
 	//buffer = new unsigned char[54];//allocating memory for the header
 	 is.open(filename, std::ios_base::binary);
 	 if(!is.is_open()){throw fileOpen{};}
-	 std::cout<<"buffer size: "<<sizeof(buffer)<<std::endl;
+	// std::cout<<"buffer size: "<<sizeof(buffer)<<std::endl;
 	 is.read((char*)buffer, sizeof(BMPHeader));
 	 bmpheader.signature = *(unsigned short int* )(buffer);
 	 bmpheader.fileSize = *(unsigned int*)(buffer+2);
@@ -19,7 +19,8 @@ BMPFile::BMPFile(std::string filename){
 	 bmpheader.compression =*(unsigned int *)(buffer+30);	
 	 bmpheader.imageSize =*(unsigned int*)(buffer+34);
 	 bmpheader.colorsUsed =*(unsigned int *)(buffer+46);
-	std::cout<<sizeof(bmpheader)<<" is the size of header. "<<std::endl; 
+	/*optionally print header info*/
+	 /*
 	std::cout<<(char)bmpheader.signature<<std::endl
 			<<"File Size: "<<bmpheader.fileSize<<std::endl
 			<<"Header Size: "<<bmpheader.size<<std::endl
@@ -31,49 +32,36 @@ BMPFile::BMPFile(std::string filename){
 			<<"compression: "<<bmpheader.compression<<std::endl
 			<<"Image Size: "<<bmpheader.imageSize<<std::endl
 			<<"Colors used: "<<bmpheader.colorsUsed<<std::endl;
-	
+	*/	
 }
-/*TODO: Still have to implement overflow detection, presumably with try/catch?
- * As far as I can tell, the colors are being modified by the mult_factor haha*/
+/*Create new dest file, copy bitmap contents to it*/
 void BMPFile::writeToOutFile(std::string out_file, double mult_factor){
 	std::ofstream os(out_file, std::ios::binary);
 	/*copy header to our new file*/
 	long unsigned int length = bmpheader.xPixels * bmpheader.yPixels*3;	
 	unsigned char bitmap[length];
 	int currx=0, curry=0;	
-	//is.seekg(bmpheader.dataOffset,is.beg); apparently this method doesn't work
+
 	is.read((char*)bitmap,bmpheader.imageSize);
+	/*for every bit in the bitmap, assign temp values,
+	 * check for overflow this way and throw exception*/
 	for(int i =0; i<(bmpheader.xPixels*bmpheader.yPixels*3);i+=3){
 			currx =i%bmpheader.yPixels;
 			curry= i%bmpheader.xPixels;
-
-			if(bitmap[i]>255 || bitmap[i+1]>255 || bitmap[i+2]){
-				std::cout<<(int)bitmap[i]<<" "<<(int)bitmap[i+1]<<" "<<(int)bitmap[i+2]<<std::endl;
-				//<<(int)bitmap[i]<<" "<<
-				//(int)bitmap[i+1]<<
-				//(int)bitmap[i+2]<<std::endl;
-			}
-				bitmap[i]*=mult_factor;
-				bitmap[i+1]*=mult_factor;
-				bitmap[i+2]*=mult_factor;
-
-		/*	
 			try{
-
-				if(bitmap[i]>255 || bitmap[i+1]>255 || bitmap[i+2]>255){
-					
-					throw overflow{};
-				}
-			}		
-			catch(const overflow& of){
-				std::cout<<of.what()<<" "<<currx<<","<<curry<<std::endl;
-				if(bitmap[i]>255){bitmap[i] =255; }
-				if(bitmap[i+1]>255){ bitmap[i+1]=255;}
-				if(bitmap[i+2]>255){bitmap[i+2]=255;}
-				
+				int hola = (int )bitmap[i]*mult_factor;
+				int adios = (int)bitmap[i+1]*mult_factor;
+				int que = (int)bitmap[i+2]*mult_factor;
+				if(hola >255){hola = 255; throw overflow{};}
+				if(adios >255){ adios = 255; throw overflow{};}
+				if(adios >255){que=255; throw overflow{};}
+				bitmap[i] = (unsigned char)hola;
+				bitmap[i+1] = (unsigned char)adios;
+				bitmap[i+2] = (unsigned char) que;
 			}
-		*/
-		//	std::cout<<currx<<" "<<curry<<": "<<(int)bitmap[i]<<" "<<(int)bitmap[i+1]<<" "<<(int)bitmap[i+2]<<std::endl;
+			catch(const overflow& of){
+				std::cout<<of.what()<<currx<<" "<<curry<<std::endl;
+			}
 	}
 	os.write((char*)buffer, sizeof(buffer));	
 	os.write((char*)bitmap,bmpheader.imageSize); 

@@ -9,16 +9,16 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
     cmd->cmd_args.sel_args.limit = -1;
     cmd->cmd_args.sel_args.offset = -1;
     while(arg_idx < cmd->args_len) {
-		printf("Current value of arg %ld: %s\n",cmd->args_len,cmd->args[arg_idx]);
-        if (!strncmp(cmd->args[arg_idx], "*", 1)) {
+		//printf("Current value of arg %ld: %s\n",cmd->args_len,cmd->args[arg_idx]);
+        if (!strncmp(cmd->args[arg_idx], "*", 1 )) {
             add_select_field(cmd, cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "id", 2)) {
+        } else if (!strncmp(cmd->args[arg_idx], "id", 2) && !cmd->has_where) {
             add_select_field(cmd, cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "name", 4)) {
+        } else if (!strncmp(cmd->args[arg_idx], "name", 4) && !cmd->has_where) {
             add_select_field(cmd, cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "email", 5)) {
+        } else if (!strncmp(cmd->args[arg_idx], "email", 5) && !cmd->has_where) {
             add_select_field(cmd, cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "age", 3)) {
+        } else if (!strncmp(cmd->args[arg_idx], "age", 3) && !cmd->has_where) {
             add_select_field(cmd, cmd->args[arg_idx]);
         } else if(!strncmp(cmd->args[arg_idx],"where", 5)){
 				where_state_handler(cmd,arg_idx);

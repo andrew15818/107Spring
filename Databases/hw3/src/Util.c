@@ -89,30 +89,57 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
 }
 ///determine how many arguments are met by each user if cmd has a where 
 void print_where(Table_t *table,int offset, int limit, Command_t *cmd ){
+		/*4 0f 6 system tests passed so far :(*/
 	for(size_t idx = offset; idx<limit; idx++){
 		User_t *usr = get_User(table, idx);
 		size_t met=0;	
-		for(size_t field =0; field <cmd->args_len;field++){
-			if(!strncmp(cmd->args[field], "=", 1)){
+		for(size_t j=0; j<cmd->args_len;j++){
+			if(!strncmp(cmd->args[j], "=", 1)){
 				if(!strncmp(cmd->args[j-1],"email",5)){ 
-					/*implement rest of field selection logic*/
-				}
-				else{
-					printf("hola\n");
+					if(!strncmp(usr->email,cmd->args[j+1], strlen(usr->email))){met++;}
+				}else if(!strncmp(cmd->args[j-1],"age",3)){
+					if(usr->age==atoi(cmd->args[j+1])){met++;}			
+				}else if(!strncmp(cmd->args[j-1],"name",4)){
+					if(usr->age == atoi(cmd->args[j+1])){met++;}							
+				}else if(!strncmp(cmd->args[j-1],"id",2)){
+					if(usr->id == atoi(cmd->args[j+1])){met++;}	
 				}
 			}			
+			else if(!strncmp(cmd->args[j],"!=",2)){	
+				if(!strncmp(cmd->args[j-1],"email",5)){ 
+						if(strncmp(usr->email,cmd->args[j+1],sizeof(cmd->args[j-1]))){met++;}
+				}else if(!strncmp(cmd->args[j-1],"name",4)){
+						/*Probably will need to fix this*/
+						if(strncmp(usr->name, cmd->args[j+1], strlen(usr->name))){met++;}	
+				}else if(!strncmp(cmd->args[j-1],"id",2)){
+					if(usr->id != atoi(cmd->args[j+1])){met++;}	
+				}else if(!strncmp(cmd->args[j-1], "age", 3)){
+					if(usr->age != atoi(cmd->args[j+1])){met++;}	
+				}
+			}
+			else if (!strncmp(cmd->args[j],"<=",2)){				
+				if(!strncmp(cmd->args[j-1],"id",2)){ 
+					if(usr->id <= atoi(cmd->args[j+1])){met++;}
+					
+				}else if (!strncmp(cmd->args[j-1],"age",3)){
+					if(usr->age <= atoi(cmd->args[j+1])){met++;}	
+				}
+			}else if(!strncmp(cmd->args[j],">=",2)){
+				if(!strncmp(cmd->args[j-1],"id",2)){
+					if(usr->id >= atoi(cmd->args[j+1])){met++;}	
+				}else if(!strncmp(cmd->args[j-1],"age",3)){
+					if(usr->age >= atoi(cmd->args[j+1])){met++;}	
+				}
+			}
+		}
+
+		if(met == cmd->where_count){
+			print_user(usr, &(cmd->cmd_args.sel_args));	
 		}
 	}
 }
 //get values for int fields
 int get_values(User_t *usr, const char* field){
-	/* 									implement this in print_wehere
-	if(!strncmp(field, "email", 5)){
-		get_char_values(usr, field );
-	}else if(!strncmp(field, "name", 4)){
-		get_char_values(usr, field);
-	}
-	*/
 	if(!strncmp(field,"age", 3)){
 		return usr->age;		
 	}else if(!strncmp(field,"id", 2)){
@@ -143,6 +170,7 @@ int parse_input(char *input, Command_t *cmd) {
         }
     }
     while (token != NULL) {
+		//printf("Adding : %s as arg\n", token);
         add_Arg(cmd, token);
         token = strtok(NULL, " ,\n");
     }

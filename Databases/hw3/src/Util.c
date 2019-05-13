@@ -48,7 +48,7 @@ void print_user(User_t *user, SelectArgs_t *sel_args) {
             } else if (!strncmp(sel_args->fields[idx], "email", 5)) {
                 printf("%s", user->email);
             } else if (!strncmp(sel_args->fields[idx], "age", 3)) {
-                printf("%s", user->age);
+                printf("%d", user->age);
             }
         }
     }
@@ -66,7 +66,11 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     if (offset == -1) {
         offset = 0;
     }
-
+	/*maybe a problem with limit and offset*/
+	if(cmd->has_where==1){
+		print_where(table, 0, table->len, cmd);
+		return;
+	}
     if (idxList) {
         for (idx = offset; idx < idxListLen; idx++) {
             if (limit != -1 && (idx - offset) >= limit) {
@@ -83,7 +87,48 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
         }
     }
 }
+///determine how many arguments are met by each user if cmd has a where 
+void print_where(Table_t *table,int offset, int limit, Command_t *cmd ){
+	for(size_t idx = offset; idx<limit; idx++){
+		User_t *usr = get_User(table, idx);
+		size_t met=0;	
+		for(size_t field =0; field <cmd->args_len;field++){
+			if(!strncmp(cmd->args[field], "=", 1)){
+				if(!strncmp(cmd->args[j-1],"email",5)){ 
+					/*implement rest of field selection logic*/
+				}
+				else{
+					printf("hola\n");
+				}
+			}			
+		}
+	}
+}
+//get values for int fields
+int get_values(User_t *usr, const char* field){
+	/* 									implement this in print_wehere
+	if(!strncmp(field, "email", 5)){
+		get_char_values(usr, field );
+	}else if(!strncmp(field, "name", 4)){
+		get_char_values(usr, field);
+	}
+	*/
+	if(!strncmp(field,"age", 3)){
+		return usr->age;		
+	}else if(!strncmp(field,"id", 2)){
+		return usr->id;
+	}		
+	return 0;
+}
 
+const char* get_char_values(User_t *usr, const char* field){ 
+		if(!strncmp(field,"email", 5)){
+				return usr->email;	
+		}else if (!strncmp(field, "name", 4)){
+			return usr->name;
+		}
+		return NULL;
+}
 ///
 /// This function received an output argument
 /// Return: category of the command

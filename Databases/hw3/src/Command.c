@@ -20,6 +20,8 @@ Command_t* new_Command() {
     cmd->args = NULL;
     cmd->args_len = 0;
     cmd->args_cap = 0;
+	cmd->where_count=0;
+	cmd->has_where =0;
     return cmd;
 }
 
@@ -100,5 +102,7 @@ void cleanup_Command(Command_t *cmd) {
     }
     cmd->type = UNRECOG_CMD;
     cmd->args_len = 0;
+	cmd->has_where = 0;
+	cmd->where_count =0;
 }
 

@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include "Command.h"
 #include "SelectState.h"
-
+#include<stdio.h>
 void field_state_handler(Command_t *cmd, size_t arg_idx) {
     cmd->cmd_args.sel_args.fields = NULL;
     cmd->cmd_args.sel_args.fields_len = 0;
     cmd->cmd_args.sel_args.limit = -1;
     cmd->cmd_args.sel_args.offset = -1;
     while(arg_idx < cmd->args_len) {
+		printf("Current value of arg %ld: %s\n",cmd->args_len,cmd->args[arg_idx]);
         if (!strncmp(cmd->args[arg_idx], "*", 1)) {
             add_select_field(cmd, cmd->args[arg_idx]);
         } else if (!strncmp(cmd->args[arg_idx], "id", 2)) {
@@ -19,16 +20,24 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
             add_select_field(cmd, cmd->args[arg_idx]);
         } else if (!strncmp(cmd->args[arg_idx], "age", 3)) {
             add_select_field(cmd, cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
+        } else if(!strncmp(cmd->args[arg_idx],"where", 5)){
+				where_state_handler(cmd,arg_idx);
+		} else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
             table_state_handler(cmd, arg_idx+1);
-            return;
-        } else {
+            //return;
+        } else if(!strncmp(cmd->args[arg_idx], "table", 5)){
+				arg_idx++;
+				continue;
+		}else {
             cmd->type = UNRECOG_CMD;
+
             return;
         }
         arg_idx += 1;
     }
     cmd->type = UNRECOG_CMD;
+	
+
     return;
 }
 
@@ -47,7 +56,8 @@ void table_state_handler(Command_t *cmd, size_t arg_idx) {
             return;
         }
     }
-    cmd->type = UNRECOG_CMD;
+    //cmd->type = UNRECOG_CMD;
+
     return;
 }
 
@@ -82,4 +92,15 @@ void limit_state_handler(Command_t *cmd, size_t arg_idx) {
     }
     cmd->type = UNRECOG_CMD;
     return;
+}
+/*count the number of where args*/
+void where_state_handler(Command_t *cmd, size_t arg_idx){
+	cmd->has_where =1;
+	cmd->where_count =1;
+	for(int i =arg_idx ;i< cmd->args_len; i++){
+		if(!strncmp(cmd->args[i], "and", 3)){
+			cmd->where_count++;
+		}
+	}
+	return;
 }

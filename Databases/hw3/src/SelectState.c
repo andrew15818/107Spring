@@ -29,11 +29,7 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 				arg_idx++;
 				continue;
 		}else {
-            cmd->type = UNRECOG_CMD;
-
-            return;
-        }
-        arg_idx += 1;
+            cmd->type = UNRECOG_CMD; return; } arg_idx += 1;
     }
     cmd->type = UNRECOG_CMD;
 	
@@ -56,7 +52,7 @@ void table_state_handler(Command_t *cmd, size_t arg_idx) {
             return;
         }
     }
-    //cmd->type = UNRECOG_CMD;
+    cmd->type = UNRECOG_CMD;
 
     return;
 }
@@ -99,8 +95,14 @@ void where_state_handler(Command_t *cmd, size_t arg_idx){
 	cmd->where_count =1;
 	for(int i =arg_idx ;i< cmd->args_len; i++){
 		if(!strncmp(cmd->args[i], "and", 3)){
+			cmd->has_and=1;
+			cmd->where_count++;
+		}else if(!strncmp(cmd->args[i], "or", 2)){
+			cmd->has_or =1;	
 			cmd->where_count++;
 		}
 	}
+	//if(cmd->has_or){printf("There is an or here\n");}
+	//if(cmd->has_where){printf("There is and and here\n ");}
 	return;
 }

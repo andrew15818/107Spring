@@ -66,11 +66,11 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     if (offset == -1) {
         offset = 0;
     }
-	/*maybe a problem with limit and offset*/
+	/*
 	if(cmd->has_where==1){
 		print_where(table, 0, table->len, cmd);
 		return;
-	}
+	}*/
     if (idxList) {
         for (idx = offset; idx < idxListLen; idx++) {
             if (limit != -1 && (idx - offset) >= limit) {
@@ -88,21 +88,21 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     }
 }
 ///determine how many arguments are met by each user if cmd has a where 
-void print_where(Table_t *table,int offset, int limit, Command_t *cmd ){
-		/*4 0f 6 system tests passed so far :(*/
-	for(size_t idx = offset; idx<limit; idx++){
-		User_t *usr = get_User(table, idx);
+size_t check_where(Table_t *table,size_t offset, size_t limit,size_t user_id ,Command_t *cmd ){
+
+	
+		User_t *usr = get_User(table, user_id);
 		size_t met=0;	
 		for(size_t j=0; j<cmd->args_len;j++){
 			if(!strncmp(cmd->args[j], "=", 1)){
 				if(!strncmp(cmd->args[j-1],"email",5)){ 
 					if(!strncmp(usr->email,cmd->args[j+1], strlen(usr->email))){met++;}
 				}else if(!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age==atoi(cmd->args[j+1])){met++;}			
+					if(usr->age==(size_t)atoi(cmd->args[j+1])){met++;}			
 				}else if(!strncmp(cmd->args[j-1],"name",4)){
-					if(usr->age == atoi(cmd->args[j+1])){met++;}							
+					  if(!strncmp(usr->name,cmd->args[j+1],strlen(usr->name))){met++;}
 				}else if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id == atoi(cmd->args[j+1])){met++;}	
+					if(usr->id ==(size_t) atoi(cmd->args[j+1])){met++;}	
 				}
 			}			
 			else if(!strncmp(cmd->args[j],"!=",2)){	
@@ -112,31 +112,46 @@ void print_where(Table_t *table,int offset, int limit, Command_t *cmd ){
 						/*Probably will need to fix this*/
 						if(strncmp(usr->name, cmd->args[j+1], strlen(usr->name))){met++;}	
 				}else if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id != atoi(cmd->args[j+1])){met++;}	
+					if(usr->id !=(size_t) atoi(cmd->args[j+1])){met++;}	
 				}else if(!strncmp(cmd->args[j-1], "age", 3)){
-					if(usr->age != atoi(cmd->args[j+1])){met++;}	
+					if(usr->age != (size_t)atoi(cmd->args[j+1])){met++;}	
 				}
 			}
 			else if (!strncmp(cmd->args[j],"<=",2)){				
 				if(!strncmp(cmd->args[j-1],"id",2)){ 
-					if(usr->id <= atoi(cmd->args[j+1])){met++;}
+					if(usr->id <= (size_t)atoi(cmd->args[j+1])){met++;}
 					
 				}else if (!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age <= atoi(cmd->args[j+1])){met++;}	
+					if(usr->age <= (size_t)atoi(cmd->args[j+1])){met++;}	
 				}
 			}else if(!strncmp(cmd->args[j],">=",2)){
 				if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id >= atoi(cmd->args[j+1])){met++;}	
+					if(usr->id >=(size_t) atoi(cmd->args[j+1])){met++;}	
 				}else if(!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age >= atoi(cmd->args[j+1])){met++;}	
+					if(usr->age >= (size_t)atoi(cmd->args[j+1])){met++;}	
+				}
+			}else if(!strncmp(cmd->args[j],">",1)){
+				if(!strncmp(cmd->args[j-1],"id", 2)){
+					if(usr->id > (size_t)atoi(cmd->args[j+1])){met++;}	
+				}else if(!strncmp(cmd->args[j-1],"age", 3)){
+					if(usr->age > (size_t)atoi(cmd->args[j+1])){met++;}
+				}
+			}else if(!strncmp(cmd->args[j],"<",1)){
+				if(!strncmp(cmd->args[j-1],"age",3 )){
+					if(usr->age < atoi(cmd->args[j+1])){met++;}
+				}else if(!strncmp(cmd->args[j-1], "id", 2)){	
+					if(usr->id< atoi(cmd->args[j+1])){met++;}
 				}
 			}
+		
+		if(cmd->has_or ==1&& met >0){
+			return 1;
 		}
-
-		if(met == cmd->where_count){
-			print_user(usr, &(cmd->cmd_args.sel_args));	
+		if(cmd->has_and==1 && met == cmd->where_count){
+			return 1;
 		}
 	}
+	return 0;
 }
 //get values for int fields
 int get_values(User_t *usr, const char* field){
@@ -250,8 +265,19 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     cmd->type = SELECT_CMD;
     field_state_handler(cmd, 1);
+	//size_t idxList[table->len];				/*carries the ids of users that meet condition*/
+	if(cmd->has_where){
+		for(size_t i =0; i<table->len;i++){
+			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
+			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
+			if(check_where(table,offset, limit,i,cmd)){
+				//printf("Printing from custom function\n");
+				print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
+			}			
+		}
 
-    print_users(table, NULL, 0, cmd);
+	}else{print_users(table, NULL, 0, cmd);}
+
     return table->len;
 }
 

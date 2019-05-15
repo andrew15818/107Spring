@@ -37,6 +37,8 @@ typedef struct Command {
     size_t args_len;
     size_t args_cap;
 	size_t has_where;
+	size_t has_and;
+	size_t has_or;
 	size_t where_count;
     CmdArg_t cmd_args;
 } Command_t;

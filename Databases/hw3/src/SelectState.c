@@ -29,7 +29,9 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 				arg_idx++;
 				continue;
 		}else {
-            cmd->type = UNRECOG_CMD; return; } arg_idx += 1;
+            cmd->type = UNRECOG_CMD; 
+			return; }
+		arg_idx += 1;
     }
     cmd->type = UNRECOG_CMD;
 	

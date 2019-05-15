@@ -1,0 +1,27 @@
+module test_tb:
+reg src1, src2, less, A_invert, B_invert, cin, operation;
+wire result,cout;
+    alu_top test_top(
+       src1,
+       src2,
+       less,
+       A_invert,
+       B_invert,
+       cin,
+       operation,
+       result,
+       cout
+    );
+    initial
+    begin
+        assign src1 = 1;
+        assign src2 = 1;
+        assign operation  = 0;
+        assign A_invert = 0;
+        assign B_invert = 0;
+        assign cin = 1;
+
+        $finish;
+    end
+
+endmodule

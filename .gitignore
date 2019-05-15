@@ -4,15 +4,21 @@
 *textbook.pdf
 #all executable files, can recompile on local machine
 *a.out 
-
+*.gch
 #kept under a separate git
 Databases/hw2/
 #another repo
 CompOrg/Lab1/
-
+CompOrg/COLab2/
 #Two large bois in /Databases/hw2
 *.csv
+#latex files
+*review.pdf
+*review.log
+*review.aux
 
+Databases/hw3_back/
+Databases/simple_DBMS/
 Databases/hw1/player_statistic.csv
 Databases/hw1/match.csv
 

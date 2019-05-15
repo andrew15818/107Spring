@@ -1,0 +1,2 @@
+Unrecognized command 'update'.
+(1, "user1", "user1@example.com", 10)

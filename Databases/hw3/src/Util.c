@@ -134,6 +134,7 @@ size_t check_where(Table_t *table,size_t offset, size_t limit,size_t user_id ,Co
 				if(!strncmp(cmd->args[j-1],"id", 2)){
 					if(usr->id > (size_t)atoi(cmd->args[j+1])){met++;}	
 				}else if(!strncmp(cmd->args[j-1],"age", 3)){
+					//printf("Checking age >\n");
 					if(usr->age > (size_t)atoi(cmd->args[j+1])){met++;}
 				}
 			}else if(!strncmp(cmd->args[j],"<",1)){
@@ -145,12 +146,18 @@ size_t check_where(Table_t *table,size_t offset, size_t limit,size_t user_id ,Co
 			}
 		
 		if(cmd->has_or ==1&& met >0){
+			//printf("metoski %ld : %ld\n",usr->id ,met);
 			return 1;
 		}
 		if(cmd->has_and==1 && met == cmd->where_count){
+			
+			//printf("metoski : %ld\n", met);
+			return 1;
+		}else if(cmd->where_count == met){
 			return 1;
 		}
 	}
+	
 	return 0;
 }
 //get values for int fields
@@ -266,16 +273,18 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
     cmd->type = SELECT_CMD;
     field_state_handler(cmd, 1);
 	//size_t idxList[table->len];				/*carries the ids of users that meet condition*/
+	int  count =0;
 	if(cmd->has_where){
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
-			if(check_where(table,offset, limit,i,cmd)){
-				//printf("Printing from custom function\n");
+			if(check_where(table,offset, limit,i,cmd)){				
 				print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
+				count++;
 			}			
+			
 		}
-
+		return count;	
 	}else{print_users(table, NULL, 0, cmd);}
 
     return table->len;

@@ -1,0 +1,32 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1
+vtest_tb
+!s110 1554489830
+!i10b 1
+!s100 A]ZUf_3BZ2je]ho1=B;9G2
+IAl2WnY3MiRnPlmQe=C[>b0
+VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1554488107
+8/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+F/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+L0 2
+OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1554489830.000000
+!s107 /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|
+!s90 -reportprogress|300|-work|MoreWork|-v|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|-stats=none|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|
+!i113 1
+o-work MoreWork
+!s92 -work MoreWork -v /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+tCvgOpt 0

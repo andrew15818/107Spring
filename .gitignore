@@ -4,7 +4,7 @@
 *textbook.pdf
 #all executable files, can recompile on local machine
 *a.out 
-
+*.gch
 #kept under a separate git
 Databases/hw2/
 #another repo

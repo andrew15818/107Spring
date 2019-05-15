@@ -1,0 +1,115 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+d/home/ottersome
+valu
+!s110 1554490499
+!i10b 1
+!s100 baI^gm@5RRkh@HS5^LL^J2
+I_OX]99`HaLQE5NEF;g7ed1
+Z0 VDg1SIo80bB@j0V0VzS_@n1
+Z1 d/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1
+w1554490481
+8/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v
+F/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v
+L0 23
+Z2 OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1554490499.000000
+!s107 /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v|
+!i113 1
+Z3 o-work work
+Z4 tCvgOpt 0
+valu_top
+Z5 !s110 1554490259
+!i10b 1
+!s100 `=KXRK@O?KgzP_S>SMRHI2
+IWT_k>fgaB^1`>=mZF?P<C3
+R0
+R1
+w1554490082
+8/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v
+F/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v
+L0 3
+R2
+r1
+!s85 0
+31
+Z6 !s108 1554490259.000000
+!s107 /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v|
+!i113 1
+R3
+R4
+vtest_all
+!s110 1554490424
+!i10b 1
+!s100 mjTo8cIHO:f>o7?ISHPDj2
+IJE9a4M`:4lPmPXJCeJ9oK0
+R0
+R1
+w1554489957
+Z7 8/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+Z8 F/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+L0 2
+R2
+r1
+!s85 0
+31
+!s108 1554490424.000000
+Z9 !s107 /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|
+!s90 -reportprogress|300|-work|work|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|
+!i113 1
+R3
+R4
+vtest_tb
+!i10b 1
+R0
+r1
+!s85 0
+31
+!s100 A]ZUf_3BZ2je]ho1=B;9G2
+I5YPLml201oJ4ZcS8KUzho1
+R1
+w1554488107
+R7
+R8
+L0 2
+R2
+!s108 1554489794.000000
+R9
+!s90 -reportprogress|300|-work|work|-v|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|-stats=none|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v|
+!i113 1
+R3
+!s92 -work work -v /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+R4
+vtestbench
+R5
+!i10b 1
+!s100 UmfE4=JW41dW8VoGdnB231
+I4Ugl7FdH6I5^a[69AfmhV1
+R0
+R1
+w1553523294
+8/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v
+F/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v
+L0 25
+R2
+r1
+!s85 0
+31
+R6
+!s107 /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v|
+!i113 1
+R3
+R4

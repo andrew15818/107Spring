@@ -1,0 +1,34 @@
+/home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v {1 {vlog -work work -stats=none /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}} /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/topbench.v {0 {vlog -work work -stats=none /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/topbench.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module test_tb
+** Error: (vlog-13069) /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/topbench.v(53): near "end": syntax error, unexpected end.
+
+} {4.0 5.0} {}} /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v {1 {vlog -work work -stats=none /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/alu_top.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module alu_top
+
+Top level modules:
+	alu_top
+
+} {} {}} /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v {1 {vlog -work work -stats=none /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/testbench.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module testbench
+
+Top level modules:
+	testbench
+
+} {} {}} /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v {1 {vlog -work work -stats=none /home/ottersome/NCTU/Year2_Semester2/Homeworks/CO/Lab1/allbench.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module test_all
+
+Top level modules:
+	test_all
+
+} {} {}}

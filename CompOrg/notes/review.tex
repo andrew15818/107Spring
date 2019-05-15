@@ -379,7 +379,38 @@ by placing a specific field in the \textit{Cause Register}, or we could use a
 returned based on the reason for te exception. Based on the adress of the register on which we are 
 storing the values, the operating system can determine the cause of the exception. 
 
-How can we detectexceptions? We can think of them as anothe type of control hazard. If voerflow occurs,
+How can we detect exceptions? We can think of them as anothe type of control hazard. If overflow occurs,
 for example, we can flush the next instructions and then insert nops.
-\end{document}
 
+In MIPS, we would need to have the EPC register which records the address of the offending instruction,
+and the Cause register which we assume has a 5 bit field to indicate the reason for the exception.
+Suppose we detect overflow in the EX stage. We can implement exception detecting right after that stage,
+and flush the results of the EX stage. However, after the exception is handled, we would need to 
+redo the instruction.
+
+To recap: what happens in the event of addition overflow? First, we would store the address of the 
+instruction in the EPC, and the relevant code in the Cause register. Then, a signal from the ALU 
+would go to the control unit to let it know that overflow has ocurred, which would prompt the 
+control signals for the later stages to be deasserted. The address for the address which handles
+the exception would be placed in the PC, since we would need to go there for the instruction to 
+be handled.
+
+Exceptions all take one clock cycle to be handled, so the values will be written in the appropriate
+registers until the stage after which it happened. The hardware will then interrupt based on which
+was served first.
+
+Because associating a certain instruction with an exact exception might be a bit time-consuming,
+we can use \textit{imprecise exceptions}, which mean that we don't put the exact address of the
+offending instruction in the EPC register, we instead would leave it up to the OS to check 
+which instruction caused the counter.
+\subsection{Parallelism Via Instructions}
+If we remember, parallelism is the idea of performing many calculations at once. How would 
+we do this with a pipelined system? We would use \textit{instruction-level parallelism}, 
+in which we could split one instruction in the pipeline into several smaller instructions
+to perform multiple ones at once.
+
+To do this would mean that our processor would issue more than one instruction per clock 
+cycle. We could replicate the internal components of the pipeline so we could at one
+cycle be performing three ALU calculations, for example. However, we would also need
+to be able to deal with the extra work being done, since our throughput would increase.
+\end{document}

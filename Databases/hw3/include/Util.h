@@ -11,7 +11,7 @@ State_t* new_State();
 void print_prompt(State_t *state);
 void print_user(User_t *user, SelectArgs_t *sel_args);
 void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd);
-size_t check_where(Table_t *table, size_t offset, size_t limit,size_t user_id, Command_t *cmd);
+size_t check_where(Table_t *table,size_t user_id, Command_t *cmd);
 int get_values( User_t *usr,const char *field );
 const char* get_char_values(User_t *usr, const char* field);
 int parse_input(char *input, Command_t *cmd);

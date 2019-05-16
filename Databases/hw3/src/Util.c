@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include "aggregate.h"
 #include "Util.h"
 #include "Command.h"
 #include "Table.h"
@@ -88,7 +89,7 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     }
 }
 ///determine how many arguments are met by each user if cmd has a where 
-size_t check_where(Table_t *table,size_t offset, size_t limit,size_t user_id ,Command_t *cmd ){
+size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd ){
 
 	
 		User_t *usr = get_User(table, user_id);
@@ -272,18 +273,27 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     cmd->type = SELECT_CMD;
     field_state_handler(cmd, 1);
-	//size_t idxList[table->len];				/*carries the ids of users that meet condition*/
+	int idxList[table->len];				/*carries the ids of users that meet condition*/
 	int  count =0;
 	if(cmd->has_where){
+
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
-			if(check_where(table,offset, limit,i,cmd)){				
-				print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
+			if(check_where(table,i,cmd)){				
+				//print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
+				idxList[count] = i;				
+				//printf("idxList[%d] = %ld\n", count, i);
 				count++;
 			}			
-			
+	
 		}
+
+		if(cmd->has_aggreg){
+			handle_aggreg(table,cmd, idxList, count);
+			return count;
+		}
+		print_users(table, idxList, count, cmd);	
 		return count;	
 	}else{print_users(table, NULL, 0, cmd);}
 

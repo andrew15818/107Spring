@@ -40,6 +40,8 @@ typedef struct Command {
 	size_t has_and;
 	size_t has_or;
 	size_t where_count;
+	size_t has_aggreg;
+	size_t aggreg_count;
     CmdArg_t cmd_args;
 } Command_t;
 

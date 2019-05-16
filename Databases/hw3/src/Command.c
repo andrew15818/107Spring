@@ -24,6 +24,8 @@ Command_t* new_Command() {
 	cmd->has_where =0;
 	cmd->has_and =0;
 	cmd->has_or =0;
+	cmd->has_aggreg=0;
+	cmd->aggreg_count=0;
     return cmd;
 }
 
@@ -106,5 +108,7 @@ void cleanup_Command(Command_t *cmd) {
     cmd->args_len = 0;
 	cmd->has_where = 0;
 	cmd->where_count =0;
+	cmd->has_aggreg =0;
+	cmd->aggreg_count=0;
 }
 

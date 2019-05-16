@@ -22,7 +22,13 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
             add_select_field(cmd, cmd->args[arg_idx]);
         } else if(!strncmp(cmd->args[arg_idx],"where", 5)){
 				where_state_handler(cmd,arg_idx);
-		} else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
+		} else if (!strncmp(cmd->args[arg_idx],"sum",3)){
+				aggreg_state_handler(cmd, arg_idx);
+		} else if (!strncmp(cmd->args[arg_idx],"count",5)){
+				aggreg_state_handler(cmd,arg_idx);
+		} else if(!strncmp(cmd->args[arg_idx],"avg",3)) {
+				aggreg_state_handler(cmd,arg_idx);
+		}else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
             table_state_handler(cmd, arg_idx+1);
             //return;
         } else if(!strncmp(cmd->args[arg_idx], "table", 5)){
@@ -107,4 +113,10 @@ void where_state_handler(Command_t *cmd, size_t arg_idx){
 	//if(cmd->has_or){printf("There is an or here\n");}
 	//if(cmd->has_where){printf("There is and and here\n ");}
 	return;
+}
+void aggreg_state_handler(Command_t *cmd, size_t arg_idx){
+	cmd->aggreg_count++;
+	if(cmd->has_aggreg==0){cmd->has_aggreg++;}	
+	//printf("Getting an aggreg arg in the form of: %s\n",cmd->args[arg_idx]);
+	//printf("Current count of args: %ld\n",cmd->aggreg_count);
 }

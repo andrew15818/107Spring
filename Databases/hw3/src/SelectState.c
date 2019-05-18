@@ -29,11 +29,13 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 		} else if(!strncmp(cmd->args[arg_idx],"avg",3)) {
 				aggreg_state_handler(cmd,arg_idx);
 		}else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
-            table_state_handler(cmd, arg_idx+1);
+            	table_state_handler(cmd, arg_idx+1);
             //return;
-        } else if(!strncmp(cmd->args[arg_idx], "table", 5)){
-				arg_idx++;
-				continue;
+        }else if(!strncmp(cmd->args[arg_idx],"update", 6)){
+				update_state_handler(cmd, arg_idx);	
+		} else if(!strncmp(cmd->args[arg_idx], "table", 5)){
+			arg_idx++;
+			continue;
 		}else {
             cmd->type = UNRECOG_CMD; 
 			return; }
@@ -119,4 +121,8 @@ void aggreg_state_handler(Command_t *cmd, size_t arg_idx){
 	if(cmd->has_aggreg==0){cmd->has_aggreg++;}	
 	//printf("Getting an aggreg arg in the form of: %s\n",cmd->args[arg_idx]);
 	//printf("Current count of args: %ld\n",cmd->aggreg_count);
+	return;
+}
+void update_state_handler(Command_t *cmd, size_t arg_idx){
+	cmd->has_update=1;
 }

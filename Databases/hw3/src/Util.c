@@ -34,6 +34,7 @@ void print_prompt(State_t *state) {
 /// Print the user in the specific format
 ///
 void print_user(User_t *user, SelectArgs_t *sel_args) {
+
     size_t idx;
     printf("(");
     for (idx = 0; idx < sel_args->fields_len; idx++) {
@@ -93,6 +94,7 @@ size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd ){
 
 	
 		User_t *usr = get_User(table, user_id);
+		//printf("Right now checking user with id : %d\n",usr->id );
 		size_t met=0;	
 		for(size_t j=0; j<cmd->args_len;j++){
 			if(!strncmp(cmd->args[j], "=", 1)){
@@ -275,27 +277,27 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
     field_state_handler(cmd, 1);
 	int idxList[table->len];				/*carries the ids of users that meet condition*/
 	int  count =0;
-	if(cmd->has_where){
-
+		/*even if all the ids are selected, they will all be in the idxList arr*/
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
-			if(check_where(table,i,cmd)){				
+			if(check_where(table,i,cmd) == 1){				
 				//print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
 				idxList[count] = i;				
-				//printf("idxList[%d] = %ld\n", count, i);
+				//printf("successful id : %d\n",idxList[count]+1);
 				count++;
-			}			
-	
+			}				
 		}
+	if(cmd->has_aggreg == 1){		
+		//printf("calling handle aggref\n");
+		handle_aggreg(table,cmd, idxList, count);
+		return count;
+	}
 
-		if(cmd->has_aggreg){
-			handle_aggreg(table,cmd, idxList, count);
-			return count;
-		}
 		print_users(table, idxList, count, cmd);	
-		return count;	
-	}else{print_users(table, NULL, 0, cmd);}
+		//return count;	
+
+		//print_users(table, NULL, 0, cmd);
 
     return table->len;
 }

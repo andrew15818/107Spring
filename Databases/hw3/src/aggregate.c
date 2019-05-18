@@ -8,18 +8,6 @@
  *Don't think i need to calculate wheres again for each user if i do that already in 
  *the handle select statement, we just need to get the id of each user in idxList.
  * */
-
-size_t sum(Table_t *table,int *idxList, int idx_length, Command_t *cmd, int curr_arg){
-	size_t age =0;
-	if(!strncmp(cmd->args[curr_arg], "sum(age)", 9)){
-		for(int j=0;j<idx_length;j++){
-			User_t *tmp = get_User(table, idxList[j]);
-			age += tmp->age;
-			//printf("Adding %ld to %d\n", age, tmp->age);
-		}	
-	}
-	return age;
-}
 double average(Table_t *table, int *idxList, int idx_length, Command_t *cmd, int curr_arg){
 		double sum=0;
 		size_t count=0;
@@ -55,6 +43,16 @@ double average(Table_t *table, int *idxList, int idx_length, Command_t *cmd, int
 		
 		return 0;
 }
+size_t sum(Table_t *table, int *idxList, int idx_length, Command_t *cmd , int curr_arg){
+	size_t result =0;
+	if(!strncmp(cmd->args[curr_arg],"sum(age)", 8 )){
+		for(int j =0; j<idx_length; j++){
+			User_t *tmp = get_User(table, idxList[j]);
+			result+=tmp->age;
+		}
+	}
+	return result;
+}
 int count(Table_t *table,int *idxList, int idx_length, Command_t *cmd){
 	//printf("entering the count function\n");
 	if(cmd->has_where == 0){return table->len;}
@@ -70,17 +68,19 @@ void handle_aggreg(Table_t *table, Command_t *cmd, int *idxList, int idx_length)
 	//printf("Entering handle aggreg funct\n");
 	for(int i =0; i<cmd->args_len;i++){
 		if(!strncmp(cmd->args[i],"count(",6)){
+
 			int quantity = count(table,idxList,idx_length,cmd);
-			printf("(%d) ", quantity);
+			printf("(%d)\n", quantity);
 		}else if (!strncmp(cmd->args[i],"avg(",3)){
+		//	printf("Getting avg vibes from you :(\n");
 			double avg = average(table, idxList, idx_length, cmd, i);	
-			printf("(%.3lf) ", avg);
-		}else if(!strncmp(cmd->args[i],"sum(", 4)){
-			size_t total = sum(table, idxList, idx_length, cmd, i);
-			printf("(%ld)",total);
+			printf("(%.3lf)\n", avg);
+		}else if(!strncmp(cmd->args[i],"sum(",4)){
+			size_t summation = sum(table, idxList, idx_length,cmd,i);
+			printf("(%ld)\n", summation);
 		}
 	}
-	printf("\n");
+	//printf("\n");
 
 	return;
 }

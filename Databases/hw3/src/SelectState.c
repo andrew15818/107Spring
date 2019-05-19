@@ -4,6 +4,7 @@
 #include "SelectState.h"
 #include<stdio.h>
 void field_state_handler(Command_t *cmd, size_t arg_idx) {
+	//printf("Calling field state handler\n");
     cmd->cmd_args.sel_args.fields = NULL;
     cmd->cmd_args.sel_args.fields_len = 0;
     cmd->cmd_args.sel_args.limit = -1;
@@ -31,9 +32,7 @@ void field_state_handler(Command_t *cmd, size_t arg_idx) {
 		}else if (!strncmp(cmd->args[arg_idx], "from", 4)) {
             	table_state_handler(cmd, arg_idx+1);
             //return;
-        }else if(!strncmp(cmd->args[arg_idx],"update", 6)){
-				update_state_handler(cmd, arg_idx);	
-		} else if(!strncmp(cmd->args[arg_idx], "table", 5)){
+        }else if(!strncmp(cmd->args[arg_idx], "table", 5)){
 			arg_idx++;
 			continue;
 		}else {
@@ -124,5 +123,7 @@ void aggreg_state_handler(Command_t *cmd, size_t arg_idx){
 	return;
 }
 void update_state_handler(Command_t *cmd, size_t arg_idx){
+	printf("Receiving update command\n");
 	cmd->has_update=1;
+
 }

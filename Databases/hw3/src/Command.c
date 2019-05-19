@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Command.h"
-
+/*If it doesn't work, remember to change 
+ * the upate command*/
 CMD_t cmd_list[] = {
     { ".exit", 5, BUILT_IN_CMD },
     { ".output", 7, BUILT_IN_CMD },
@@ -9,6 +10,8 @@ CMD_t cmd_list[] = {
     { ".help", 5, BUILT_IN_CMD },
     { "insert", 6, QUERY_CMD },
     { "select", 6, QUERY_CMD },
+	{ "update", 6, EDIT_CMD},
+	{ "delete", 6, EDIT_CMD},
     { "", 0, UNRECOG_CMD },
 };
 

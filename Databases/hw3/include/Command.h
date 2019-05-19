@@ -5,6 +5,7 @@ enum {
     UNRECOG_CMD,
     BUILT_IN_CMD,
     QUERY_CMD,
+	EDIT_CMD,
 };
 
 enum {

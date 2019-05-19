@@ -90,13 +90,11 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     }
 }
 ///determine how many arguments are met by each user if cmd has a where 
-size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd ){
-
-	
+size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd , int cmd_offset){	
 		User_t *usr = get_User(table, user_id);
-		//printf("Right now checking user with id : %d\n",usr->id );
 		size_t met=0;	
-		for(size_t j=0; j<cmd->args_len;j++){
+		for(size_t j=cmd_offset; j<cmd->args_len;j++){
+
 			if(!strncmp(cmd->args[j], "=", 1)){
 				if(!strncmp(cmd->args[j-1],"email",5)){ 
 					if(!strncmp(usr->email,cmd->args[j+1], strlen(usr->email))){met++;}
@@ -110,7 +108,7 @@ size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd ){
 			}			
 			else if(!strncmp(cmd->args[j],"!=",2)){	
 				if(!strncmp(cmd->args[j-1],"email",5)){ 
-						if(strncmp(usr->email,cmd->args[j+1],sizeof(cmd->args[j-1]))){met++;}
+						if(strncmp(usr->email,cmd->args[j+1],strlen(usr->email))){met++;}
 				}else if(!strncmp(cmd->args[j-1],"name",4)){
 						/*Probably will need to fix this*/
 						if(strncmp(usr->name, cmd->args[j+1], strlen(usr->name))){met++;}	
@@ -195,7 +193,6 @@ int parse_input(char *input, Command_t *cmd) {
         }
     }
     while (token != NULL) {
-		//printf("Adding : %s as arg\n", token);
         add_Arg(cmd, token);
         token = strtok(NULL, " ,\n");
     }
@@ -281,10 +278,10 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
-			if(check_where(table,i,cmd) == 1){				
+			if(check_where(table,i,cmd,0) == 1){				
 				//print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
 				idxList[count] = i;				
-				//printf("successful id : %d\n",idxList[count]+1);
+				//printf("successful id : %d\n",idxList[count]);
 				count++;
 			}				
 		}
@@ -301,7 +298,52 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 
     return table->len;
 }
+/*TODO: figure out how to handle delete commands*/
+int handle_edit_cmd(Table_t *table, Command_t *cmd){
 
+	if(!strncmp(cmd->args[0], "update",6)){
+		handle_update_cmd(table, cmd);	
+	}else if(!strncmp(cmd->args[0],"delete",6)){
+		printf("Not done yet\n");
+		//handle_delete_cmd(table, cmd);
+	}
+	return cmd->type;
+}
+int handle_update_cmd(Table_t *table, Command_t *cmd){
+
+	int cmd_offset;
+	for(int a=0; a<cmd->args_len;a++){
+		if(!strncmp(cmd->args[a],"where", 5)){
+			where_state_handler(cmd,(size_t)a);
+			cmd_offset = a;	
+		}
+	}
+	size_t  idxList[table->len];
+	size_t count =0;
+	if(cmd->has_where ==1){
+		for(int j =0 ;j<table->len; j++){
+			if(check_where(table, j, cmd,cmd_offset)== 1){
+				idxList[count] = j;
+				count++;
+			}
+		}
+	}else{
+		for(int j = 0; j<table->len; j++){
+			User_t *usr = get_User(table, j);
+			idxList[j]=j;
+			count++;
+		}
+	}
+	for(int j = 0; j<count; j++){
+		User_t *tmp = get_User(table, idxList[j]);
+		if(!strncmp(cmd->args[3],"email", 5)){
+			strncpy(tmp->email,cmd->args[5],strlen(tmp->email));
+		}else if(!strncmp(cmd->args[3],"age", 3)){
+			tmp->age = atoi(cmd->args[5]);
+		}
+	}
+		return 0;
+}
 ///
 /// Show the help messages
 ///

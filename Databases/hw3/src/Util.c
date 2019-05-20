@@ -343,6 +343,11 @@ int handle_update_cmd(Table_t *table, Command_t *cmd){
 			strncpy(tmp->email,cmd->args[5],strlen(tmp->email));
 		}else if(!strncmp(cmd->args[3],"age", 3)){
 			tmp->age = atoi(cmd->args[5]);
+		}else if(!strncmp(cmd->args[3], "id", 2)){
+			if(count==1 && get_User(table, atoi(cmd->args[5]))==NULL){
+				tmp->id= atoi(cmd->args[5]);		
+			}
+			continue;		
 		}
 	}
 		return count;

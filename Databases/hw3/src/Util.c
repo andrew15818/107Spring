@@ -275,6 +275,7 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 	int idxList[table->len];				/*carries the ids of users that meet condition*/
 	int  count =0;
 		/*even if all the ids are selected, they will all be in the idxList arr*/
+	if(cmd->has_where ==1){
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
@@ -285,6 +286,7 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 				count++;
 			}				
 		}
+	}
 	if(cmd->has_aggreg == 1){		
 		//printf("calling handle aggref\n");
 		handle_aggreg(table,cmd, idxList, count);
@@ -293,8 +295,10 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 
 		print_users(table, idxList, count, cmd);	
 		//return count;	
-
-		//print_users(table, NULL, 0, cmd);
+		if(cmd->has_aggreg ==0 && cmd->has_where ==0){
+			print_users(table, NULL, 0, cmd);
+		}
+		
 
     return table->len;
 }
@@ -304,11 +308,13 @@ int handle_edit_cmd(Table_t *table, Command_t *cmd){
 	if(!strncmp(cmd->args[0], "update",6)){
 		handle_update_cmd(table, cmd);	
 	}else if(!strncmp(cmd->args[0],"delete",6)){
-		printf("Not done yet\n");
-		//handle_delete_cmd(table, cmd);
+		//printf("Not done yet\n");
+		handle_delete_cmd(table, cmd);
 	}
 	return cmd->type;
 }
+/*returns the number of rows modified, not sure if this is
+ * correct approach*/
 int handle_update_cmd(Table_t *table, Command_t *cmd){
 
 	int cmd_offset;
@@ -316,6 +322,7 @@ int handle_update_cmd(Table_t *table, Command_t *cmd){
 		if(!strncmp(cmd->args[a],"where", 5)){
 			where_state_handler(cmd,(size_t)a);
 			cmd_offset = a;	
+			break;
 		}
 	}
 	size_t  idxList[table->len];
@@ -329,7 +336,7 @@ int handle_update_cmd(Table_t *table, Command_t *cmd){
 		}
 	}else{
 		for(int j = 0; j<table->len; j++){
-			User_t *usr = get_User(table, j);
+			//User_t *usr = get_User(table, j);
 			idxList[j]=j;
 			count++;
 		}
@@ -342,7 +349,56 @@ int handle_update_cmd(Table_t *table, Command_t *cmd){
 			tmp->age = atoi(cmd->args[5]);
 		}
 	}
-		return 0;
+		return count;
+}
+/*Initially repeating the same process as for update, mark matching
+ * rows with -1 in idxList and skip printing them in the end*/
+int handle_delete_cmd(Table_t *table, Command_t *cmd){
+		int cmd_offset, count =0;
+		int idxList[table->len];
+		for(int a = 0; a<cmd->args_len; a++){
+			if(!strncmp(cmd->args[a],"where", 5)){
+				where_state_handler(cmd, (size_t)a);	
+				cmd_offset = a;
+				break;
+			}	
+		}for(int b = 0; b<table->len;b++ ){
+			if(check_where(table,b,cmd,cmd_offset)==1){
+				idxList[count] =b;	
+				count++;
+			}	
+		}
+		/*attempt to create a new user buffer with only the ids
+		 * that we want to keep.*/
+		User_t *new_user_buf = (User_t *)malloc(sizeof(User_t)*count);
+		unsigned char *new_cache_buf = (unsigned char*)malloc(sizeof(unsigned char)*count);
+		//memset(new_cache_buf,0,sizeof(User_t)*count);
+		
+		for(int c = 0; c<table->len; c++){
+			int found=0;
+			for(int d = 0; d<count; d++){
+				if(idxList[d]==c){
+					found =1;	
+					break;
+				}	
+			}
+			if(found ==0){
+				//might need to add offset for each user
+				memcpy(new_user_buf+c, get_User(table, c), sizeof(User_t));		
+				new_cache_buf[c]=1;
+		//		printf("No seg fault here :D\n");
+			}
+		}
+
+		free(table->users);	
+		free(table->cache_map);
+		table->cache_map = new_cache_buf;
+		table->users = new_user_buf;
+		table->len -= count;	
+	
+		
+		//print_users(table,NULL,0,cmd);
+		return 0;	
 }
 ///
 /// Show the help messages

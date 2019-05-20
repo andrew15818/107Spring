@@ -152,5 +152,38 @@ we want to insert is less than the value of the root, we choose the left subtree
 next value. We find the value for which z is greater than the key. Then, we set our \textit{trailing pointer}
 equal to that value, and then make our desired node z equal to the appropriate child node of that node. 
 
+\subsection{Randomly Built Binary Search Trees}
+Lorem Ipsum
+\section{Red-Black Trees}
+Red-Black Trees are a special case of binary trees. Each node is either red or black, and has the same 
+properties as a normal BST. RBTs have several important characteristics:
+\begin{enumerate}
+		\item{\textbf{Every Node is either Red or Black}}
+		\item{\textbf{The root is black}}
+		\item{\textbf{Every leaf(a state called NIL), is also black}}
+		\item{\textbf{For all nodes, all simple paths from the node to descendant leaves
+				contain the same amount of black nodes}}
+\end{enuemrate}
 
+Thus the height of a red-black tree can be thought of as the \textbf{black-height} of the tree, or the amount
+of black nodes from the root to a leaf, which by a property of the tree will always be the same length.
+Black trees make good search trees because the height of the nodes is at most 2ln(n+1).
+
+We can replicate al of the procedures for the binary trees with the red-black trees, except insert and delete, 
+because we cannot effectively guarantee that the resulting tree will be a RBT.
+
+\subsection{Rotation}
+Whenever we want to perform an insert or delete operation on the RBT, we cannot guarantee that the tree afterwards
+will retain the same properties. T ensure that it does, we can perform a roation on the tree. 
+
+The procedure for the rotation involves managing the values of the nodes and switching them (similar to what we
+did with insertions in the Linked List homework).
+\subsection{Insertion}
+(1. Thats's what she said)To insert a new node into the tree, we actually insert it as if it were a regular
+binary tree. We then need to call another function that 'fixes up' the values in the tree. This procedure can
+rotate elements as necessary and guarantees that the produced tree will be a RBT.
+
+For the fixup procedure, we need to first guarantee that the nodes are colored in the correct manner when we 
+first insert the node. Then, we need to ensure that the other RBT properties hold, and we call the 
+left-rotate or right-rotate procedures if we need to rearrange the height of the tree. 
 \end{document}

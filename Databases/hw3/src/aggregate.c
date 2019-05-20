@@ -21,7 +21,7 @@ double average(Table_t *table, int *idxList, int idx_length, Command_t *cmd, int
 		}
 		if(!strncmp(cmd->args[curr_arg],"avg(age)",8)){
 			for(size_t j=0; j<idx_length;j++){
-				if(check_where(table, idxList[j], cmd)){
+				if(check_where(table, idxList[j], cmd,0)){
 					User_t *tmp =get_User(table,idxList[j]);
 					//printf("Checking the age of a user with id : %d\n", tmp->id);
 					sum+=tmp->age;
@@ -58,7 +58,7 @@ int count(Table_t *table,int *idxList, int idx_length, Command_t *cmd){
 	if(cmd->has_where == 0){return table->len;}
 	int count =0;
 	for(int j=0; j<idx_length;j++){
-		if(check_where(table, idxList[j],cmd)){
+		if(check_where(table, idxList[j],cmd,0)){
 			count++;	
 		}
 	}

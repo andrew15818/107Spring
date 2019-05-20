@@ -64,15 +64,12 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     size_t idx;
     int limit = cmd->cmd_args.sel_args.limit;
     int offset = cmd->cmd_args.sel_args.offset;
+	//printf("offset: %d, limit: %d\n",offset, limit );
 
     if (offset == -1) {
         offset = 0;
     }
-	/*
-	if(cmd->has_where==1){
-		print_where(table, 0, table->len, cmd);
-		return;
-	}*/
+	
     if (idxList) {
         for (idx = offset; idx < idxListLen; idx++) {
             if (limit != -1 && (idx - offset) >= limit) {
@@ -279,27 +276,26 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 		for(size_t i =0; i<table->len;i++){
 			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
 			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
+
 			if(check_where(table,i,cmd,0) == 1){				
-				//print_user(get_User(table,i),&(cmd->cmd_args.sel_args));
 				idxList[count] = i;				
-				//printf("successful id : %d\n",idxList[count]);
+				//printf("");
 				count++;
 			}				
 		}
-	}
+
+	}	
 	if(cmd->has_aggreg == 1){		
-		//printf("calling handle aggref\n");
+
 		handle_aggreg(table,cmd, idxList, count);
 		return count;
 	}
-
+		/*Might want to change here afterwards*/
 		print_users(table, idxList, count, cmd);	
-		//return count;	
-		if(cmd->has_aggreg ==0 && cmd->has_where ==0){
-			print_users(table, NULL, 0, cmd);
-		}
-		
-
+	
+	if(cmd->has_aggreg ==0 && cmd->has_where ==0){
+		print_users(table, NULL, 0, cmd);
+	}
     return table->len;
 }
 /*TODO: figure out how to handle delete commands*/
@@ -370,35 +366,43 @@ int handle_delete_cmd(Table_t *table, Command_t *cmd){
 		}
 		/*attempt to create a new user buffer with only the ids
 		 * that we want to keep.*/
-		User_t *new_user_buf = (User_t *)malloc(sizeof(User_t)*count);
-		unsigned char *new_cache_buf = (unsigned char*)malloc(sizeof(unsigned char)*count);
-		//memset(new_cache_buf,0,sizeof(User_t)*count);
-		
-		for(int c = 0; c<table->len; c++){
-			int found=0;
-			for(int d = 0; d<count; d++){
-				if(idxList[d]==c){
-					found =1;	
-					break;
-				}	
-			}
-			if(found ==0){
-				//might need to add offset for each user
-				memcpy(new_user_buf+c, get_User(table, c), sizeof(User_t));		
-				new_cache_buf[c]=1;
-		//		printf("No seg fault here :D\n");
-			}
+
+
+
+
+		User_t *new_user_buf = (User_t *)malloc(sizeof(User_t)*INIT_TABLE_SIZE);
+		unsigned char *new_cache_buf = (unsigned char*)malloc(sizeof(unsigned char)*INIT_TABLE_SIZE);
+		memset(new_cache_buf,0,sizeof(char)*INIT_TABLE_SIZE);
+
+
+
+
+		int second_count =0;	
+		if(cmd->has_where==1){
+				for(int c = 0; c<table->len; c++){
+					int found=0;
+					for(int d = 0; d<count; d++){
+						if(idxList[d]==c){
+							//printf("we want to delete the user with id : %d\n",c);
+							found = 1;	
+							break;
+						}	
+					}
+					if(found ==0){
+						//might need to add offset for each user
+						memcpy(new_user_buf+second_count, get_User(table,c), sizeof(User_t));			
+						new_cache_buf[second_count]=1;
+						second_count++;
+					}
+				}
 		}
 
 		free(table->users);	
 		free(table->cache_map);
 		table->cache_map = new_cache_buf;
 		table->users = new_user_buf;
-		table->len -= count;	
-	
-		
-		//print_users(table,NULL,0,cmd);
-		return 0;	
+		table->len =second_count;
+		return table->len;	
 }
 ///
 /// Show the help messages

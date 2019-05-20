@@ -14,7 +14,6 @@ double average(Table_t *table, int *idxList, int idx_length, Command_t *cmd, int
 		if(cmd->has_where == 0 && (!strncmp(cmd->args[curr_arg],"avg(age)",8))){
 			for(size_t j = 0; j<table->len; j++){
 				User_t *tmp = get_User(table, j);
-
 				sum+=tmp->age;
 			}
 			return (double)(sum/table->len);
@@ -45,7 +44,15 @@ double average(Table_t *table, int *idxList, int idx_length, Command_t *cmd, int
 }
 size_t sum(Table_t *table, int *idxList, int idx_length, Command_t *cmd , int curr_arg){
 	size_t result =0;
-	if(!strncmp(cmd->args[curr_arg],"sum(age)", 8 )){
+
+	if(cmd->has_where ==0 && !strncmp(cmd->args[curr_arg],"sum(age)", 8)){	
+		for(int j=0; j<table->len;j++){
+			User_t *usr = get_User(table, j);
+			result+=usr->age;
+		
+		}
+	}
+	else if(!strncmp(cmd->args[curr_arg],"sum(age)", 8 )){
 		for(int j =0; j<idx_length; j++){
 			User_t *tmp = get_User(table, idxList[j]);
 			result+=tmp->age;

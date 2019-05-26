@@ -1,39 +1,52 @@
 #include"HashTable.h"
 #include<iostream>
-#define MAX_SIZE 10000
+#define MAX_SIZE 3000
 HashTable::HashTable(){
-	patients = new patient[MAX_SIZE];
+	patients = new patient*[MAX_SIZE];
+	patients = {NULL};
 }
 HashTable::~HashTable(){
+	for(int i =0;i<MAX_SIZE;i++){
+		patient* tmp = patients[i];
+		/*
+		while(tmp!=NULL){
+			patient *scrap = tmp;
+			tmp = tmp->next;
+			delete scrap;
+		}*/
+	}
 	delete[] patients;
 }
 /*simple hash based on golden ratio*/
 int HashTable::Hash(std::string key){
-	std::cout<<"key received is "<<key<<std::endl;
-	double random_prime = .6180339; //golden ratio
 	int primo = 131;
 	unsigned int sum=0;
 	for(int i=0; i<key.length();i++){
 		sum+=((int)key[i]*primo)%MAX_SIZE;	
 	}
 	sum%=MAX_SIZE;
-	std::cout<<"the final hash value of this is "<<sum<<std::endl;
-	return 0;
+	return sum;
 }
 void HashTable::addItem(std::string key, std::string gender, int height, int weight){
 	int index = Hash(key);
+	patient *tmp = new patient;
+	tmp->key = key;
+	tmp->gender = gender;	
+	tmp->height = height;
+	tmp->weight = weight;
 }
 std::string HashTable::getGender(){
-	return "hola";
+	return this->gender;
 }
 int HashTable::getHeight(){
-	return 0;
+	return this->height;
 }
 int HashTable::getWeight(){
-	return 0;
+	return this->weight;;
 }
 /*search for the given item in the list and return const ref*/
 /*
-patient& HashTable::operator[](std::string key){
-		
+const patient& HashTable::operator[](std::string key){
+	int index = Hash(key); 
+	return patients[index];		
 }*/

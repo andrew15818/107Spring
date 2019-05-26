@@ -5,9 +5,9 @@
  * elements?*/
 struct patient{
 	patient *prev = NULL,*next=NULL;
-	std::string key;
-	std::string gneder;
-	int age;
+	std::string key="";
+	std::string gender;
+	int height, weight;
 };
 class HashTable{
 	private:
@@ -22,7 +22,7 @@ class HashTable{
    		std::string getGender();
 		int 		getHeight();
 		int 		getWeight();
-		patient& 	operator[](std::string);		//return a reference bc we would
+		const patient& 	operator[](std::string);		//return a reference bc we would
 									//wish to modify returned object
 };
 #endif

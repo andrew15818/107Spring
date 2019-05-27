@@ -11,7 +11,7 @@ struct patient{
 };
 class HashTable{
 	private:
-		patient *patients;
+		patient **patients;
 		std::string key, gender;
 		int height, weight;
 		int Hash(std::string);
@@ -22,7 +22,7 @@ class HashTable{
    		std::string getGender();
 		int 		getHeight();
 		int 		getWeight();
-		const patient& 	operator[](std::string);		//return a reference bc we would
-									//wish to modify returned object
+		const patient& 	operator[](std::string);		//return const ref b/c don't want change
+
 };
 #endif

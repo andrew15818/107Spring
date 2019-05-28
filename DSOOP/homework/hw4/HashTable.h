@@ -5,7 +5,7 @@
  * elements?*/
 struct patient{
 	patient *prev = NULL,*next=NULL;
-	std::string key="";
+	std::string key;
 	std::string gender;
 	int height, weight;
 };
@@ -23,6 +23,7 @@ class HashTable{
 		int 		getHeight();
 		int 		getWeight();
 		const patient& 	operator[](std::string);		//return const ref b/c don't want change
+		void print(const patient&);
 
 };
 #endif

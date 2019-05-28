@@ -46,7 +46,7 @@ void EvaluateFunc(HashTable hashTable, vector<string> testCases)
 
 int main()
 {
-    /** 
+    /* 
     HashTable is the class implemented by yourself, 5 member functions you need to implement as belows:
         1. addItem(key, gender, height, weight) : add data into your hash table
         2. operator[key]    : return item by selected key
@@ -58,7 +58,7 @@ int main()
 
     // for evaluation
     vector<string> testCases;
-/*
+
     // read data line by line
     std::ifstream infile("data.txt");
     string key, gender;
@@ -72,20 +72,21 @@ int main()
         testCases.push_back(key);
     }
 
-    /**
+    /*
     basic test cases
     ANS:
     hashTable["0015239667"].getGender(): female
     hashTable["0015239667"].getHeight(): 160
     hashTable["0015239667"].getWeight(): 57
     */
+/*
     cout << "hashTable[\"0015239667\"].getGender(): " << hashTable["0015239667"].getGender() << endl;
     cout << "hashTable[\"0015239667\"].getHeight(): " << hashTable["0015239667"].getHeight() << endl;
     cout << "hashTable[\"0015239667\"].getWeight(): " << hashTable["0015239667"].getWeight() << endl;
-
+*/
     // Evauluate the speed of your hash table
     auto totalCost = measure<std::chrono::nanoseconds>::execution(EvaluateFunc, hashTable, testCases);
     cout << "Mean: " << totalCost / testCases.size() << " ns" << endl;
-*/
+
     return 0;
 }

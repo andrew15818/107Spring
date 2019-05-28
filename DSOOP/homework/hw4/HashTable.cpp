@@ -10,11 +10,11 @@ HashTable::HashTable(){
 HashTable::~HashTable(){
 	for(int i = 0; i<MAX_SIZE; i++){
 		if(patients[i] != NULL){
-			std::cout<<"entering loop"<<std::endl;
+
 			patient *previous=NULL;	
 			patient *tmp = patients[i];
 			while(tmp != NULL){
-				std::cout<<"Entering second loop "<<std::endl;
+
 				previous = tmp;
 				tmp = tmp->next;
 				delete previous;
@@ -22,8 +22,9 @@ HashTable::~HashTable(){
 		}	
 	}
 	delete[] patients;
+
 }
-/*simple hash based on golden ratio*/
+/*simple hash*/ 
 int HashTable::Hash(std::string key){
 	int primo = 131;
 	unsigned int sum=0;
@@ -41,20 +42,25 @@ void HashTable::addItem(std::string key, std::string gender, int height, int wei
 	tmp->height = height;
 	tmp->weight = weight;
 	if(patients[index] == NULL){	
-		patients[index] = tmp;
+		patients[index] = tmp;	
 	}
-	/*Check if there is a better way to do this later*/	
+	/*Incrementing the pointer b4 setting the address :(*/
 	else if(patients[index] != NULL){
-		patient *insert  = patients[index];
+		patient *insert  = new patient;
+		insert = patients[index];
+		
 		while(1){
-			insert = insert->next;	
-			if( insert == NULL){
-				insert->prev = tmp;	
-				tmp->prev->next = NULL;
+			if(insert->next == NULL){
+				insert->next = tmp;
+				tmp->prev = insert;
 				break;
+			}	
+			else{
+				insert = insert->next;	
 			}
 		}
-	}
+		//delete insert;
+	}	
 }
 std::string HashTable::getGender(){
 	return this->gender;
@@ -70,4 +76,11 @@ int HashTable::getWeight(){
 const patient& HashTable::operator[](std::string key){
 	int index = Hash(key); 
 	return patients[index];		
+}*/
+/*
+void HashTable::print(const patient& paciente){
+	std::cout<<"Patient's records: "<<std::endl;
+	std::cout<<"key: "<<paciente->key<<std::endl;
+	std::cout<<"height: "<<paciente->height<<std::endl;
+	std::cout<<"weight: "<<paciente->weight<<std::endl;
 }*/

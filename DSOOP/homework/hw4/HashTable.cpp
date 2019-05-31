@@ -13,15 +13,18 @@ HashTable::~HashTable(){
 	for(int i = 0; i<MAX_SIZE; i++){
 		if(patients[i] != NULL){
 
-			patient *previous=NULL;	
-			patient *tmp = patients[i];
+			patient *previous = new patient;
+			previous=NULL;			
+			patient *tmp = new patient;
+			tmp = patients[i];
 			while(tmp != NULL){
-
 				previous = tmp;
-				tmp = tmp->next;
+				tmp = tmp->next;	
 				delete previous;
 			}	
+			delete tmp;
 		}	
+		
 	}
 	delete[] patients;	
 }
@@ -45,7 +48,7 @@ void HashTable::addItem(std::string key, std::string gender, int height, int wei
 	tmp->height = height;
 	tmp->weight = weight;
 	if(patients[index]== NULL){	
-		std::cout<<"adding elements at index "<<index<<std::endl;
+		//std::cout<<"adding elements at index "<<index<<std::endl;
 		patients[index] = tmp;	
 	}
 	/*Incrementing the pointer b4 setting the address :(*/
@@ -61,6 +64,8 @@ void HashTable::addItem(std::string key, std::string gender, int height, int wei
 		tmp->prev = insert;
 		insert->next = tmp;
 	}
+	//std::cout<<"Adding object with the values: "<<std::endl;
+	//std::cout<<tmp->key<<" "<<tmp->gender<<" "<<tmp->height<<" "<<tmp->weight<<std::endl;
 }
 /*
 std::string HashTable::getGender(){
@@ -77,8 +82,9 @@ int HashTable::getWeight(){
 
 const patient& HashTable::operator[](std::string key){
 	int index = Hash(key); 
-	std::cout<<key<<std::endl;
-	patient* prueba;
+	//std::cout<<key<<std::endl;
+	//patient* prueba;
+	patient *prueba = new patient;
 	if(patients[index]->key ==key){
 		return (patient&)*patients[index];
 	//	prueba = patients[index];
@@ -97,6 +103,7 @@ const patient& HashTable::operator[](std::string key){
 void HashTable::print(){
 /*
 	std::cout<<"Patient's records: "<<std::endl;
+	hashTable["puta"].getGender();
 	std::cout<<"key: "<<paciente->key<<std::endl;
 	std::cout<<"height: "<<paciente->height<<std::endl;
 	std::cout<<"weight: "<<paciente->weight<<std::endl;
@@ -105,7 +112,7 @@ void HashTable::print(){
 		if(patients[i]!=NULL){
 			patient *tmp = patients[i];
 			while(tmp != NULL){
-					std::cout<<tmp->key<<" is at index ,"<<i;
+					//std::cout<<tmp->key<<" is at index ,"<<i;
 					std::cout<<tmp->gender<<" ";
 					std::cout<<tmp->height<<" "<<tmp->weight<<std::endl;
 					tmp = tmp->next;

@@ -79,11 +79,11 @@ int main()
     hashTable["0015239667"].getHeight(): 160
     hashTable["0015239667"].getWeight(): 57
     */
-/*
+
     cout << "hashTable[\"0015239667\"].getGender(): " << hashTable["0015239667"].getGender() << endl;
     cout << "hashTable[\"0015239667\"].getHeight(): " << hashTable["0015239667"].getHeight() << endl;
     cout << "hashTable[\"0015239667\"].getWeight(): " << hashTable["0015239667"].getWeight() << endl;
-*/
+
     // Evauluate the speed of your hash table
     auto totalCost = measure<std::chrono::nanoseconds>::execution(EvaluateFunc, hashTable, testCases);
     cout << "Mean: " << totalCost / testCases.size() << " ns" << endl;

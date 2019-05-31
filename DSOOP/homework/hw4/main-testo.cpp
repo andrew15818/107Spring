@@ -16,9 +16,15 @@ HashTable hashTable;
 	while(cin>>key>>gender>>height>>weight){
 		if(key=="0")break;
 		hashTable.addItem(key,gender,height,weight);
+
+
 	}
-	//hashTable.print();
-	hashTable["puta"].getGender();
+	cout<<"calling print object function "<<endl;
+	//hashTable["puta"].print_object();
+	std::cout<<hashTable["puta"].getGender()<<std::endl;
+	std::cout<<hashTable["puta"].getHeight()<<std::endl;
+	std::cout<<hashTable["puta"].getWeight()<<std::endl;
+
 /*
     while (infile >> key >> gender >> height >> weight)
     {

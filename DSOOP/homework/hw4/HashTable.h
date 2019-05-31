@@ -3,11 +3,20 @@
 #include<string>
 /*Maybe use a linked list for colliding
  * elements?*/
-struct patient{
+class patient{
+	public:
 	patient *prev = NULL,*next=NULL;
 	std::string key;
 	std::string gender;
 	int height, weight;
+	//public:	
+		 std::string getGender()const{
+			return gender;
+		}const int getHeight()const{
+			return height;
+		}int getWeight()const{
+			return  weight;
+		}
 };
 class HashTable{
 	private:
@@ -20,10 +29,10 @@ class HashTable{
 		~HashTable();
 		void addItem(std::string,std::string , int , int );
    		std::string getGender();
-		int 		getHeight();
-		int 		getWeight();
-		const patient& 	operator[](std::string);		//return const ref b/c don't want change
-		void print(const patient&);
+		//int 		getHeight();
+		//int 		getWeight();
+		const patient& operator[](std::string);		//return const ref b/c don't want change
+		void print();
 
 };
 #endif

@@ -9,10 +9,17 @@ HashTable hashTable;
     vector<string> testCases;
 
     // read data line by line
-    std::ifstream infile("data.txt");
+    //std::ifstream infile("data.txt");
+	//cout<<"hash table\"puta\" "<<endl;
     string key, gender;
     int height, weight;
-
+	while(cin>>key>>gender>>height>>weight){
+		if(key=="0")break;
+		hashTable.addItem(key,gender,height,weight);
+	}
+	//hashTable.print();
+	hashTable["puta"].getGender();
+/*
     while (infile >> key >> gender >> height >> weight)
     {
         hashTable.addItem(key, gender, height, weight);
@@ -20,7 +27,7 @@ HashTable hashTable;
         // collect evaluated test cases
         testCases.push_back(key);
     }
-
+*/
 
 	return 0;
 }

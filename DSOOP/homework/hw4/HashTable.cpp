@@ -12,10 +12,10 @@ HashTable::HashTable(){
 HashTable::~HashTable(){
 	for(int i = 0; i<MAX_SIZE; i++){
 		if(patients[i] != NULL){
-
+		//	std::cout<<sizeof(patient)<<" is the size of patient object"<<std::endl;
 			patient *previous = new patient;
 			previous=NULL;			
-			patient *tmp = new patient;
+			patient *tmp ;//= new patient;
 			tmp = patients[i];
 			while(tmp != NULL){
 				previous = tmp;
@@ -26,7 +26,7 @@ HashTable::~HashTable(){
 		}	
 		
 	}
-	delete[] patients;	
+
 }
 
 /*simple hash*/ 
@@ -64,26 +64,10 @@ void HashTable::addItem(std::string key, std::string gender, int height, int wei
 		tmp->prev = insert;
 		insert->next = tmp;
 	}
-	//std::cout<<"Adding object with the values: "<<std::endl;
-	//std::cout<<tmp->key<<" "<<tmp->gender<<" "<<tmp->height<<" "<<tmp->weight<<std::endl;
 }
-/*
-std::string HashTable::getGender(){
-	return this->gender;
-}
-int HashTable::getHeight(){
-	return this->height;
-}
-int HashTable::getWeight(){
-	return this->weight;;
-}
-*/
 /*search for the given item in the list and return const ref*/
-
 const patient& HashTable::operator[](std::string key){
 	int index = Hash(key); 
-	//std::cout<<key<<std::endl;
-	//patient* prueba;
 	patient *prueba = new patient;
 	if(patients[index]->key ==key){
 		return (patient&)*patients[index];

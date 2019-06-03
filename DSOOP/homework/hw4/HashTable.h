@@ -29,8 +29,9 @@ class HashTable{
 		patient **patients;
 		std::string key, gender;
 		int height, weight;
-		int Hash(std::string);
+	
 	public:
+		int Hash(const std::string& key)const;
 		HashTable();				
 		~HashTable();
 		void addItem(std::string,std::string , int , int );

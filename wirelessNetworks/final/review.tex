@@ -1,0 +1,58 @@
+\documentclass{article}
+\title{Introduction to Wireless Networks Final Review}
+\begin{document}
+\section{Multiplexing}
+We want to allow multiple users to access the same channel. We usually split the
+available spectrum. We also have the frequency and time domains to be wary of. 
+
+\textit{frequency domain}: The frequency domain refers to the measuring of a 
+mathematical function with respect to its frequency rather than with respect to time.
+
+\textit{time domain}: measuring of functions with respect to time, rather than frequency. 
+
+When we have mutliple users that want to share a channel, we need to think of some way to 
+split that channel, this is called \textbf{multiplexing}.
+
+There are usually two major ways of splitting the channel, frequency division and time division.
+
+With frequency division, we assign each comepting signal a special frequency to transmit.
+
+With time division, we split a \textit{frame} into multiple \textit{slots}, which can then be 
+occupied by the signals that wish to transmit instructions. Both the uplink and downlink channels
+will employ this. However, from the diagram in the ppt, it seems that the slot link in the 
+uplink will occupy the nth slot in the downlink. The ith packet in the uplink will occupy the 
+n-ith slot in the downlink.
+
+\subsection{Code Division Multiple Access}
+With this scheme, we can  use a ``spread spectrum" technique to generate a code for each individual
+sender. We break each bit according to a code (usually with bitwise XOR) to generate a code. Then,
+we can simultaneously send data for multiple users at once. 
+
+This introduces the \textbf{Near-Far problem}, which denotes the phenomenon where a signal that is
+closer to the receiver will be heard stronger and even potentially block one that is farther away. There
+are a couple kinds of interference in CDMA, such as \textit{adjacent channel interference}.
+
+\subsection{Narrowband systems}
+There are a large number of narrowband systems, such as:
+\begin{enumerate}
+		\item{\textbf{FDD}}
+		\item{\textbf{Narrrowband TDMA and Narrowband FDMA}}
+		\item{\textbf{FDMA\ FDD}}
+		\item{\textbf{FDMA\ TDD}}
+		\item{\textbf{TDMA\ TDD}}
+\end{enumerate}
+
+\subsection{Frequency Division Duplexing}
+For FDD, we have two different bands, the forward and reverse band. We need a duplexer here to The 
+frequency separating the reverse and forward channel is always constant.
+\subsection{Time division Multiplexing}
+Using this scheme, we use time for forward and reverse link. Then multiple users can share a single
+radio channel. There is a different reverse and forward time slot.
+
+\subsection{wideband Systems}
+In this scheme there are a large nubmer of transmitters on one channel. 
+\subsection{Frequency Dvision Multiplexing Access}
+In this scheme, there is one circuit per channel. Because there is only one circuit (circuit switching)
+per channel, if the channel is not in use, then it will not be as efficient(similar to circuit switching
+in networks). This is usually implemented in narrowband systems.
+\end{document}

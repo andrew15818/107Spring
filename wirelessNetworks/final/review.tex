@@ -225,6 +225,8 @@ signals coming from farther away, even if they are all within range(this is for 
 only within range of B. If node C wants to transmit, then it wouldn't
 be able to because it would detect the channel, even if it is not necessary. 
 
+
+
 \subsection{MACA (Multiple Access Collision Avoidance)}
 We don't have the carrier sense, instead we use short signaling packets to get information about the situation. We have 
 two types of packets, \textit{RTS}(Request to Send) and \textit{CTS}(Clear to Send). RTS messages are sent to the receiver
@@ -248,6 +250,68 @@ provides the ``best effort" service, it doesn't guarantee a packet will be deliv
 \textit{SIFS} are the highest priority level.
 \textit{PIFS} are used by controller to issue polls. 
 \textit{DIFS} are used for everything else (asynchronous).
+
+\section{Wifi}
+The wifi standard, since it was started in the 90s, only had support for around two MHz.
+The original standard was developed in the 90's, but has continually been increased to allow for greater speeds.
+The standard allows for different types of services, such as \textit{distribution service} and \textit{station service}.
+
+When a host in one service set wants to connect to one in another set, it performs ESS-Transition.
+\subsection{Distribution Service}
+The first distribution service is by \textit{association}. First, a user must connect to an access point.  
+
+The next distribution service is called \textit{disassociation}. With this distribution service, once there is a connection
+to the access point, once we want to canel it, we have to send a message to the access point. Then the AP will update its
+database. If, for whatever reason, the access point wants to stop offering its service, the AP will just send a signal 
+to the connected devices. It's just a notice, doesn't need to wait for a repsonse.
+
+Yet another service is called \textit{reassociation}. When a device connected to an access point wants to reconnect to a 
+new one, the base station will send a new reconnect message to the AP and then, if another AP requests the user's info,
+the base station can respond with the correct information.
+
+\textbf{ditribution} refers to the service that sends the information obtained from the dissasociation service to the 
+correct location. The actual standard doesn't say how to do it, so let's get creative!
+
+\textbf{integration} This service's main function is to allow wired and wireless networks to transfer messages to each
+other.
+
+\textbf{Authentication} is the application when we authorize a user according to one of the two methods in the standard:
+\begin{enumerate}
+		\item{Open System}: Most basic authentication scheme. The base station sends the request for authentication 
+				(Authentication Request Frame) to the AP, and it will respond with either a positive or negative 
+				response.
+\end{enumerate}
+Some other services offered by the service:
+\textbf{Deauthentication}: When the authentication is going to be cancelled, the base station will also cut connection
+with the  Access Point.
+
+\textbf{Privacy}: Becuase originally, any person could have access to a message while it was transmitting, the standard
+added the ability to add encryption and decryption when sending the information.
+
+\textbf{Delivery of data}: Just a service that allows the AP and base station to communicate.
+
+When there is a collision detected when the package is sent to the internet(collision), the packet will be returned 
+to the place where it originated. Ethernet uses CSMA/CD. Also becuase detecting collision in the internet is usually 
+challenging, the standard will use \textit{CSMA/CD}.
+
+The standard alo uses the same queueing options as CSMA/CA(SIFS,...).
+
+The point coordinator will manage the Beacon Frame and let other workstations know that the point coordintor's job. Then,
+there will be a contention period. During this period, it changes to dissassociation state until the next point 
+coordinator's job begins.
+
+The standard also employs RTS/CTS messages. In the implementation of wifi, there is also the \textit{Hidden Node} problem.
+Although using distinct messages to ask for permission to send, these messages themselves can still collide with each other.
+
+\textbf{Frequency Hopping Spread Spectrum} is a method of sending radio signals by switching frequency channels. Different
+countries have different settings. Although the Frequency hopping spectrum is quite narrow, the speed at which a signal
+can switch frequency makes it seem like it is actually utilizing the entire spectrum.
+
+\textbf{Direct Sequence Spread Spectrum} is a technique aimed at reducing overall signal interference. The spreading of this
+signal makes the channel overall more noisy though.
+
+Which one should we use then? 
+Because DSSS makes the overall frequency band more noisy, then we shouls only use it when the channel is wide.
 \section{Misc.}
 \subsection{GSM}
 The \textit{Global System for Global Communications} was develeoped in the mid 90s for 2G mobile communications. Originally,

@@ -8,17 +8,21 @@ struct Vertex{
 	//vector or linked-list style
 	//is better?
 //	Vertex *next = NULL;;
-	std::vector<Vertex> adjacency;
+	std::vector<Vertex*> adjacency;
 		Vertex(size_t value ){
 			this->value = value;
 		}
 };
 class graph{
 	private:
-		size_t len;
+		size_t len,filled;
 		Vertex **vertices;
 	public:
+	//TODO: add destructor for garbage collection w/ dynamic memmory
 	graph(size_t nodes);
-	void addNode(const size_t& key,const Vertex&);	
+	void newNode(const size_t& key);	
+	void addOrder(const size_t& primary, const size_t secondary);
+	//just to see if everything is a-okay
+	void print();
 };
 #endif

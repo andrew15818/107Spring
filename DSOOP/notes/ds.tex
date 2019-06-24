@@ -191,4 +191,11 @@ What is  a minimum spanning tree? It is a tree such that allows us to connect al
 graph by using the weights of the edges(so edgy bro). if we wanted to connect all the edges by minimizing 
 or maximizing a certain parameter, and include all of the vertices, we could use a minimum spanning tree 
 based on the graph.
+
+The main idea behind the algorithm is that we are keeping a set A of edges that are \textit{safe edges}, 
+or edges that belong to the set of edges that are part of the Minimum Spanning Tree. However, finding edges
+that correspond to the MST is the tricky part.
+
+The approach then continues to be: we separate the graph into two sets: S and v-S. The set V-S of vertices
+is one that respects A. Then, we choose one of the lines that connects A and V-S. 
 \end{document}

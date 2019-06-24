@@ -1,5 +1,5 @@
 #include "graph.h"
-#include <vector>
+//#include <vector>
 #include "iostream"
 graph::graph(size_t nodes){
 	this->len = nodes;
@@ -40,5 +40,6 @@ void graph::print(){
 		idx++;	
 	}
 }
+void graph::search(){
 
-
+}

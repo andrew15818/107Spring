@@ -163,7 +163,7 @@ properties as a normal BST. RBTs have several important characteristics:
 		\item{\textbf{Every leaf(a state called NIL), is also black}}
 		\item{\textbf{For all nodes, all simple paths from the node to descendant leaves
 				contain the same amount of black nodes}}
-\end{enuemrate}
+\end{enumerate}
 
 Thus the height of a red-black tree can be thought of as the \textbf{black-height} of the tree, or the amount
 of black nodes from the root to a leaf, which by a property of the tree will always be the same length.
@@ -192,10 +192,66 @@ graph by using the weights of the edges(so edgy bro). if we wanted to connect al
 or maximizing a certain parameter, and include all of the vertices, we could use a minimum spanning tree 
 based on the graph.
 
+
 The main idea behind the algorithm is that we are keeping a set A of edges that are \textit{safe edges}, 
 or edges that belong to the set of edges that are part of the Minimum Spanning Tree. However, finding edges
 that correspond to the MST is the tricky part.
 
 The approach then continues to be: we separate the graph into two sets: S and v-S. The set V-S of vertices
 is one that respects A. Then, we choose one of the lines that connects A and V-S. 
+
+\section{Iterators and Containers}
+The C++ standard library provides some objects (similar to pointers), called containers, which allow us to 
+sometimes store many things of different types because of the use of templates. These provide many built in 
+functionality and might be useful whenever we want to solve problems(looking at you, cpe!).
+\subsection{Introduction to Containers}
+Containers come in all shapes and sizes, and allow us to freely use somewhat optimized data structures to not force
+ut to reinvent the wheel.
+\subsubsection{Containers Overview: Containers}
+The first type of container is called the Non-linear types of containers. These  are then able to be checked
+inside datat structure like \texttt{array<>},\texttt{tree<>},\texttt{List},...
+These are also called \textit{\textbf{First class containers}}.
+\subsubsection{Near Containers}
+These types of containers have most of the characteristics of first-class containers, and thus are able to do fast 
+mathematical operations for example.
+\subsection{Introduction to Iterators}
+Iterators can act almost as pointers a lot of the time, especially becuase they can be \textit{dereferenced} and 
+modified almost exactly like a pointer is. We can also increment the iterator by the \texttt{++} operator, which is
+the same one we use for pointer arithmetic.
+
+These types of containers (\textit{First class}) have a value called \texttt{begin()} and \texttt{end()}, which return
+an iterator to the beginning or end of the object(similar to the ones you're used to with vectors).
+
+We can use the \texttt{istream} and \texttt{ostream} iterators to copy items from stdin directly to an integer or whatever.
+Then we can just increment the iterator to assign a value to the next integer (or whatever). \textit{In ``the real world", why
+would you use this over regular i/o?}.
+
+Also, we can declare a \texttt{ostream} iterator and have it point to \texttt{cout}, for example. From the example, it seems
+as if every time we dereference it, it will print its value to stdout? 
+There are about 5 different categorties of iterators we can use on different objects. 
+\begin{enumerate}
+		\item{output }: These iterators are used to write an element to the container.These types of iterators are only used
+				to move through \textit{single-pass}, or: they can't iterate again through a container they already iterated
+				over.
+		\item{input}: Similar to output iterators, these read an element from a container. These iterators can only move 
+				\textit{forward} direction; or they can't move to the previous elemtnt in the container.
+		\item{forward}: These iterators are used to move through a container multiple times, they are not restricted to just
+				one time.
+		\item{bidirectional}: These types of iterators combine ability to move either forward or backwards, can also iterate
+				through the container multiple times.
+		\item{random access}: These iterators combine the abilities of all other iterators except they can access any element 
+				of the container.
+\end{enumerate}
+\subsection{Introduction to ALgorithms(the library)}
+An important thing to note: the STL algorithms can on ly be used with iterators! Usually, they involve using iterators to 
+denote a certain range where we want the algorithm to operate.
+\subsubsection{\texttt{vector}}
+The vector class can often deliver the best insert performance when we must do it at the end of the vector or the beginning. 
+Since the vecotr can dynamically grow by allocating a greater amount of memeory cells, then we don't need to worry about its 
+size like we do for a built in array.
+
+The usual functions which you use are all here, \texttt{size()}, \texttt{capactity()}, \texttt{push\_back()},etc... These 
+all perform the basic operations on the vector, and allow us to check its attributes and modify it. In later versions of c++,
+we can use the \texttt{cbegin()} and \texttt{cend()} as iterators to \textit{const} members of the family.
+
 \end{document}

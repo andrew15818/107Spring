@@ -7,6 +7,7 @@ int main(){
 		cout<<"Working with "<<nodes<< " nodes"<<endl;	
 		graph Graph(nodes);
 		size_t input,layers;
+		/*first receving the values of the vertices*/
 		for(int i=0;i<nodes;i++){
 			cin>>input;	
 			Graph.newNode(input);
@@ -20,7 +21,9 @@ int main(){
 			Graph.addOrder(secondary,primary);
 			//cout<<primary<<" "<<order<<" "<<secondary;	
 		}
-		Graph.print();
+		Graph.search();
+
+		Graph.printNodeInfo();
 	}
 	return 0;
 }

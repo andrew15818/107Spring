@@ -18,11 +18,11 @@ int main(){
 		cout<<layers<<" layers to look through"<<endl;
 		for(int j=0;j<layers;j++){
 			cin>>primary>>order>>secondary;		
-			Graph.addOrder(secondary,primary);
+			Graph.addOrder(primary, secondary);
 			//cout<<primary<<" "<<order<<" "<<secondary;	
 		}
 		Graph.search();
-
+		//Graph.print();
 		Graph.printNodeInfo();
 	}
 	return 0;

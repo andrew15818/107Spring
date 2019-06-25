@@ -25,7 +25,7 @@ class graph{
 	public:
 	//TODO: add destructor for garbage collection w/ dynamic memmory
 	/*To help in the DFS main function*/
-	friend void searchAid(const size_t& key,  Vertex* v, size_t timestamp);
+	friend void searchAid(const size_t& key,  Vertex* v, size_t * timestamp,Vertex* vertices);
 
 
 	graph(size_t nodes);
@@ -33,6 +33,7 @@ class graph{
 	void addOrder(const size_t& primary, const size_t secondary);
 	//just to see if everything is a-okay
 	void print();
+	void printColor();
 	void printNodeInfo();
 	void search();
 

@@ -5,55 +5,63 @@
 graph::graph(size_t nodes){
 	this->len = nodes;
 	filled=0;
-	timestamp=1;
+	timestamp=0;
 	vertices = new Vertex*[len];
 	//vertices ={0};
 	for(int i =0;i<len;i++){
 		vertices[i]=NULL;
 	}
 }
+graph::~graph(){
 
-void searchAid(const size_t& key, Vertex* v, size_t *timestamp,Vertex** vertices){
-	//maybe keep track of the idx in each iteration and pass it, instead of trying to pass the vertex object
-	//v->d = *timestamp;	
-	//v->color = 1;
-	//std::cout<<"Going to compare the values in vertex array with the vertex pointer passed to function"<<std::endl;
-	//std::cout<<"value in v: "<<v->value<<" "<<v->color<<std::endl;
-	Vertex *puta = vertices[key];
-	puta ->color=1;
+}
+void searchAid(const size_t& key, Vertex* v, size_t *timestamp, std::vector<const Vertex*> &topological ){
 	*timestamp+=1;
-	puta->d = *timestamp;
-	
-	std::cout<<"value in m'array: "<<puta->value<<""<<puta->color<<std::endl;	
+	v->d = *timestamp;	
+	v->color = 1;
 	std::vector<Vertex*>::iterator it;
-	for(it = puta->adjacency.begin(); it != puta->adjacency.end();it++){
+	for(it = v->adjacency.begin(); it != v->adjacency.end();it++){
 		if((*it)->color == 0){
-			(*timestamp)++;
-			searchAid((*it)->value-1, puta,timestamp,vertices);
+			searchAid((*it)->value, (*it),timestamp, topological);
 		}	
 	}
 	*timestamp+=1;	
-	puta->f = *timestamp;
+	v->f = *timestamp;
 	v->color =2;
-
+	topological.push_back(v);
 	return;
 }
 //just adding the node to the array
 void graph::newNode(const size_t& key){
 	Vertex *vertex = new Vertex(key);	
 	vertices[filled] = vertex;
-	std::cout<<vertices[filled]->value<<" is what we just put in at index  "<<filled<<std::endl; filled++;
+	//std::cout<<vertices[filled]->value<<" is what we just put in at index  "<<filled<<std::endl; 
+	filled++;
 }
-//adding the edges of the graph(completion order for the Topological sort)
-void graph::addOrder(const size_t& primary, const size_t secondary){
-	Vertex *insert = new Vertex(secondary);
-	for(size_t idx=0;idx<len;idx++){
-		if(vertices[idx]->value == primary){
-			vertices[idx]->adjacency.push_back(insert);	
-			std::cout<<"added pair "<<vertices[idx]->value<<" > "<<insert->value<<std::endl;
+Vertex* graph::getVertex(const size_t& idx){
+	size_t index = 0;
+	for(index;index<len;index++){
+		if(vertices[index]->value == idx){
+			return vertices[index];
 			break;
 		}
 	}
+	return NULL;
+}
+//The problem was instead of adding the same node with the same value, 
+//I was creating a new node with the secondary value every time, so 
+//twice as much nodes. Then the nodes in the vertices[] arr and each 
+//individual adjacency list were different.
+void graph::addOrder(const size_t& primary, const size_t secondary){
+	Vertex *insert = getVertex(secondary);
+	//std::cout<<"This is the vertex we got: "<<insert->value<<std::endl;	
+	for(size_t idx=0;idx<len;idx++){
+		if(vertices[idx]->value == primary){
+			vertices[idx]->adjacency.push_back(insert);	
+			break;
+		}
+	}
+		
 }
 void graph::print(){
 	size_t idx=0;
@@ -80,16 +88,20 @@ void graph::printNodeInfo(){
 		idx++;
 	}
 }
+void graph::printTopologicalOrder(){
+	std::vector<const Vertex*>::iterator it;
+	for(it = topological.end()-1;it!= topological.begin()-1;it--){
+		std::cout<<(*it)->value<<" ";
+	}
+	std::cout<<std::endl;
+}
 //Here is where we perform DFS
 void graph::search(){
 	size_t idx=0;
 	for(idx;idx<filled;idx++){
 		if(vertices[idx]->color == 0){	
-			this->printNodeInfo();
-			searchAid(idx,vertices[idx], &timestamp, vertices); 
-			//this->printColor();
-		}
-	
+			searchAid(idx,vertices[idx], &timestamp, topological); 	
+		}	
 	}
 }
 

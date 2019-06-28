@@ -13,7 +13,11 @@ graph::graph(size_t nodes){
 	}
 }
 graph::~graph(){
-
+	size_t idx=0;
+	for(idx;idx<len;idx++){
+		delete vertices[idx];	
+	}
+	delete [] vertices;
 }
 void searchAid(const size_t& key, Vertex* v, size_t *timestamp, std::vector<const Vertex*> &topological ){
 	*timestamp+=1;
@@ -88,10 +92,17 @@ void graph::printNodeInfo(){
 		idx++;
 	}
 }
-void graph::printTopologicalOrder(){
+void graph::printTopologicalOrder(std::ofstream& output){
 	std::vector<const Vertex*>::iterator it;
 	for(it = topological.end()-1;it!= topological.begin()-1;it--){
-		std::cout<<(*it)->value<<" ";
+		output<<(*it)->value<<" ";
+	}
+	output<<std::endl;
+}
+void graph::printTopologicalOrderToStdOut(){
+	std::vector<const Vertex*>::iterator it;	
+	for(it=topological.end()-1;it!=topological.begin()-1;it--){
+		std::cout<<(*it)->value<<" ";	
 	}
 	std::cout<<std::endl;
 }

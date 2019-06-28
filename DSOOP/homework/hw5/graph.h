@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "cstddef"
+#include <fstream>
 #include <vector>
 struct Vertex{
 	//REMEMBER: white=0; gray = 1; black =2
@@ -39,7 +40,8 @@ class graph{
 	void print();
 	void printColor();
 	void printNodeInfo();
-	void printTopologicalOrder();
+	void printTopologicalOrder(std::ofstream& output);
+	void printTopologicalOrderToStdOut();
 	void search();
 
 };

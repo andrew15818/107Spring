@@ -5,11 +5,14 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include "aggregate.h"
+#include <string.h>
 #include "Util.h"
 #include "Command.h"
 #include "Table.h"
 #include "SelectState.h"
+#include "AggregateFunctions.h"
+#include "UpdateUtil.h"
+#include "DeleteUtil.h"
 
 ///
 /// Allocate State_t and initialize some attributes
@@ -34,7 +37,6 @@ void print_prompt(State_t *state) {
 /// Print the user in the specific format
 ///
 void print_user(User_t *user, SelectArgs_t *sel_args) {
-
     size_t idx;
     printf("(");
     for (idx = 0; idx < sel_args->fields_len; idx++) {
@@ -64,118 +66,28 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd
     size_t idx;
     int limit = cmd->cmd_args.sel_args.limit;
     int offset = cmd->cmd_args.sel_args.offset;
-	//printf("offset: %d, limit: %d\n",offset, limit );
 
     if (offset == -1) {
         offset = 0;
     }
-	
+
     if (idxList) {
         for (idx = offset; idx < idxListLen; idx++) {
-            if (limit != -1 && (idx - offset) >= limit) {
+            if (limit != -1 && (int)(idx - offset) >= limit) {
                 break;
             }
             print_user(get_User(table, idxList[idx]), &(cmd->cmd_args.sel_args));
         }
     } else {
         for (idx = offset; idx < table->len; idx++) {
-            if (limit != -1 && (idx - offset) >= limit) {
+            if (limit != -1 && (int)(idx - offset) >= limit) {
                 break;
             }
             print_user(get_User(table, idx), &(cmd->cmd_args.sel_args));
         }
     }
 }
-///determine how many arguments are met by each user if cmd has a where 
-size_t check_where(Table_t *table,size_t user_id ,Command_t *cmd , int cmd_offset){	
-		User_t *usr = get_User(table, user_id);
-		size_t met=0;	
-		for(size_t j=cmd_offset; j<cmd->args_len;j++){
 
-			if(!strncmp(cmd->args[j], "=", 1)){
-				if(!strncmp(cmd->args[j-1],"email",5)){ 
-					if(!strncmp(usr->email,cmd->args[j+1], strlen(usr->email))){met++;}
-				}else if(!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age==(size_t)atoi(cmd->args[j+1])){met++;}			
-				}else if(!strncmp(cmd->args[j-1],"name",4)){
-					  if(!strncmp(usr->name,cmd->args[j+1],strlen(usr->name))){met++;}
-				}else if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id ==(size_t) atoi(cmd->args[j+1])){met++;}	
-				}
-			}			
-			else if(!strncmp(cmd->args[j],"!=",2)){	
-				if(!strncmp(cmd->args[j-1],"email",5)){ 
-						if(strncmp(usr->email,cmd->args[j+1],strlen(usr->email))){met++;}
-				}else if(!strncmp(cmd->args[j-1],"name",4)){
-						/*Probably will need to fix this*/
-						if(strncmp(usr->name, cmd->args[j+1], strlen(usr->name))){met++;}	
-				}else if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id !=(size_t) atoi(cmd->args[j+1])){met++;}	
-				}else if(!strncmp(cmd->args[j-1], "age", 3)){
-					if(usr->age != (size_t)atoi(cmd->args[j+1])){met++;}	
-				}
-			}
-			else if (!strncmp(cmd->args[j],"<=",2)){				
-				if(!strncmp(cmd->args[j-1],"id",2)){ 
-					if(usr->id <= (size_t)atoi(cmd->args[j+1])){met++;}
-					
-				}else if (!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age <= (size_t)atoi(cmd->args[j+1])){met++;}	
-				}
-			}else if(!strncmp(cmd->args[j],">=",2)){
-				if(!strncmp(cmd->args[j-1],"id",2)){
-					if(usr->id >=(size_t) atoi(cmd->args[j+1])){met++;}	
-				}else if(!strncmp(cmd->args[j-1],"age",3)){
-					if(usr->age >= (size_t)atoi(cmd->args[j+1])){met++;}	
-				}
-			}else if(!strncmp(cmd->args[j],">",1)){
-				if(!strncmp(cmd->args[j-1],"id", 2)){
-					if(usr->id > (size_t)atoi(cmd->args[j+1])){met++;}	
-				}else if(!strncmp(cmd->args[j-1],"age", 3)){
-					//printf("Checking age >\n");
-					if(usr->age > (size_t)atoi(cmd->args[j+1])){met++;}
-				}
-			}else if(!strncmp(cmd->args[j],"<",1)){
-				if(!strncmp(cmd->args[j-1],"age",3 )){
-					if(usr->age < atoi(cmd->args[j+1])){met++;}
-				}else if(!strncmp(cmd->args[j-1], "id", 2)){	
-					if(usr->id< atoi(cmd->args[j+1])){met++;}
-				}
-			}
-		
-		if(cmd->has_or ==1&& met >0){
-			//printf("metoski %ld : %ld\n",usr->id ,met);
-			return 1;
-		}
-		if(cmd->has_and==1 && met == cmd->where_count){
-			
-			//printf("metoski : %ld\n", met);
-			return 1;
-		}else if(cmd->where_count == met){
-			return 1;
-		}
-	}
-	
-	return 0;
-}
-//get values for int fields
-int get_values(User_t *usr, const char* field){
-	if(!strncmp(field,"age", 3)){
-		return usr->age;		
-	}else if(!strncmp(field,"id", 2)){
-		return usr->id;
-	}		
-	return 0;
-}
-
-const char* get_char_values(User_t *usr, const char* field){ 
-		if(!strncmp(field,"email", 5)){
-				return usr->email;	
-		}else if (!strncmp(field, "name", 4)){
-			return usr->name;
-		}
-		return NULL;
-}
 ///
 /// This function received an output argument
 /// Return: category of the command
@@ -239,6 +151,12 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
     } else if (!strncmp(cmd->args[0], "select", 6)) {
         handle_select_cmd(table, cmd);
         return SELECT_CMD;
+    } else if (!strncmp(cmd->args[0], "update", 6)) {
+        handle_update_cmd(table, cmd);
+        return UPDATE_CMD;
+    } else if (!strncmp(cmd->args[0], "delete", 6)) {
+        handle_delete_cmd(table, cmd);
+        return DELETE_CMD;
     } else {
         return UNRECOG_CMD;
     }
@@ -252,8 +170,8 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
 int handle_insert_cmd(Table_t *table, Command_t *cmd) {
     int ret = 0;
     User_t *user = command_to_User(cmd);
-    if (user) {
-        ret = add_User(table, user);
+    if (user) {//If use was succesfully created(we havent yet assigned a place to save the users pointer)
+        ret = add_User(table, user);//now we do that 
         if (ret > 0) {
             cmd->type = INSERT_CMD;
         }
@@ -269,146 +187,161 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     cmd->type = SELECT_CMD;
     field_state_handler(cmd, 1);
-	int idxList[table->len];				/*carries the ids of users that meet condition*/
-	int  count =0;
-		/*even if all the ids are selected, they will all be in the idxList arr*/
-	if(cmd->has_where ==1){
-		for(size_t i =0; i<table->len;i++){
-			size_t offset = (cmd->cmd_args.sel_args.offset ==-1)?0:cmd->cmd_args.sel_args.offset;
-			size_t limit = (cmd->cmd_args.sel_args.limit==-1)?table->len:cmd->cmd_args.sel_args.offset;
 
-			if(check_where(table,i,cmd,0) == 1){				
-				idxList[count] = i;				
-				//printf("");
-				count++;
-			}				
-		}
-
-	}	
-	if(cmd->has_aggreg == 1){		
-
-		handle_aggreg(table,cmd, idxList, count);
-		return count;
-	}
-		/*Might want to change here afterwards*/
-		print_users(table, idxList, count, cmd);	
-	
-	if(cmd->has_aggreg ==0 && cmd->has_where ==0){
-		print_users(table, NULL, 0, cmd);
-	}
+    //we can create two cases, when we have conditions and when we dont
+    if(cmd->cmd_args.sel_args.aggregatorAmount > 0){
+        if(cmd->condArgs.whereConditions != -1){
+            int listo[table->len];//todo maybe change that size?
+            size_t idxlen = getWhereList(table,cmd,listo);
+            if (cmd->cmd_args.sel_args.offset <= 0 && (cmd->cmd_args.sel_args.limit > 0 || cmd->cmd_args.sel_args.limit == -1))
+                display_agg_info(table, cmd, listo, idxlen);
+        }else{
+            if (cmd->cmd_args.sel_args.offset <= 0 && (cmd->cmd_args.sel_args.limit > 0 || cmd->cmd_args.sel_args.limit == -1))
+                display_agg_info(table, cmd, NULL, 0);
+        }
+    }else{
+        if(cmd->condArgs.whereConditions != -1){
+            int listo[table->len];//todo maybe change that size?
+            //lammo para llenar arrayo
+            size_t idxlen = getWhereList(table,cmd,listo);
+            print_users(table, listo, idxlen, cmd);
+        }else{
+            print_users(table, NULL, 0, cmd);
+        }
+    }
     return table->len;
 }
-/*TODO: figure out how to handle delete commands*/
-int handle_edit_cmd(Table_t *table, Command_t *cmd){
 
-	if(!strncmp(cmd->args[0], "update",6)){
-		handle_update_cmd(table, cmd);	
-	}else if(!strncmp(cmd->args[0],"delete",6)){
-		//printf("Not done yet\n");
-		handle_delete_cmd(table, cmd);
-	}
-	return cmd->type;
-}
-/*returns the number of rows modified, not sure if this is
- * correct approach*/
 int handle_update_cmd(Table_t *table, Command_t *cmd){
+    cmd->type = UPDATE_CMD;
+    update_cmd_handler(cmd);//organize stuff here
+    
+    //Cycle through parameters until set is found
+    int argIdx = 0;
+    while(strncmp(cmd->args[argIdx++],"set",3));
 
-	int cmd_offset;
-	for(int a=0; a<cmd->args_len;a++){
-		if(!strncmp(cmd->args[a],"where", 5)){
-			where_state_handler(cmd,(size_t)a);
-			cmd_offset = a;	
-			break;
-		}
-	}
-	size_t  idxList[table->len];
-	size_t count =0;
-	if(cmd->has_where ==1){
-		for(int j =0 ;j<table->len; j++){
-			if(check_where(table, j, cmd,cmd_offset)== 1){
-				idxList[count] = j;
-				count++;
-			}
-		}
-	}else{
-		for(int j = 0; j<table->len; j++){
-			//User_t *usr = get_User(table, j);
-			idxList[j]=j;
-			count++;
-		}
-	}
-	for(int j = 0; j<count; j++){
-		User_t *tmp = get_User(table, idxList[j]);
-		if(!strncmp(cmd->args[3],"email", 5)){
-			strncpy(tmp->email,cmd->args[5],strlen(tmp->email));
-		}else if(!strncmp(cmd->args[3],"age", 3)){
-			tmp->age = atoi(cmd->args[5]);
-		}else if(!strncmp(cmd->args[3], "id", 2)){
-			if(count==1 && get_User(table, atoi(cmd->args[5]))==NULL){
-				tmp->id= atoi(cmd->args[5]);		
-			}
-			continue;		
-		}
-	}
-		return count;
+    char * fieldName = cmd->args[argIdx];
+    char * valueToChangeTo;
+
+    //find field value
+    valueToChangeTo = cmd->args[argIdx+2];
+
+    //we have all the values we want, now we use where to get the list to update, if where
+    //was not used then we simply pass a null list
+    if(cmd->condArgs.whereConditions != -1){
+        int listo[table->len];
+        //lammo para llenar arrayo
+        size_t idxlen = getWhereList(table,cmd,listo);
+        doUpdateToList(table, listo, idxlen, cmd,fieldName, valueToChangeTo);
+    }else{
+        doUpdateToList(table, NULL, 0, cmd,fieldName,valueToChangeTo);
+    }
+    return 0;
+
 }
-/*Initially repeating the same process as for update, mark matching
- * rows with -1 in idxList and skip printing them in the end*/
 int handle_delete_cmd(Table_t *table, Command_t *cmd){
-		int cmd_offset, count =0;
-		int idxList[table->len];
-		for(int a = 0; a<cmd->args_len; a++){
-			if(!strncmp(cmd->args[a],"where", 5)){
-				where_state_handler(cmd, (size_t)a);	
-				cmd_offset = a;
-				break;
-			}	
-		}for(int b = 0; b<table->len;b++ ){
-			if(check_where(table,b,cmd,cmd_offset)==1){
-				idxList[count] =b;	
-				count++;
-			}	
-		}
-		/*attempt to create a new user buffer with only the ids
-		 * that we want to keep.*/
-
-
-
-
-		User_t *new_user_buf = (User_t *)malloc(sizeof(User_t)*INIT_TABLE_SIZE);
-		unsigned char *new_cache_buf = (unsigned char*)malloc(sizeof(unsigned char)*INIT_TABLE_SIZE);
-		memset(new_cache_buf,0,sizeof(char)*INIT_TABLE_SIZE);
-
-
-
-
-		int second_count =0;	
-		if(cmd->has_where==1){
-				for(int c = 0; c<table->len; c++){
-					int found=0;
-					for(int d = 0; d<count; d++){
-						if(idxList[d]==c){
-							//printf("we want to delete the user with id : %d\n",c);
-							found = 1;	
-							break;
-						}	
-					}
-					if(found ==0){
-						//might need to add offset for each user
-						memcpy(new_user_buf+second_count, get_User(table,c), sizeof(User_t));			
-						new_cache_buf[second_count]=1;
-						second_count++;
-					}
-				}
-		}
-
-		free(table->users);	
-		free(table->cache_map);
-		table->cache_map = new_cache_buf;
-		table->users = new_user_buf;
-		table->len =second_count;
-		return table->len;	
+    cmd->type = DELETE_CMD;
+    del_cmd_handler(cmd);//organize stuff here
+    
+    //Get where list as usual
+    if(cmd->condArgs.whereConditions != -1){
+        int listo[table->len];
+        //lammo para llenar arrayo
+        size_t idxlen = getWhereList(table,cmd,listo);
+        doDeleteFromTable(table, listo, idxlen, cmd);
+    }else{
+        doDeleteFromTable(table, NULL, 0, cmd);
+    }
+    return 0;
+    
 }
+///
+/// Get list of IDs that comply with WHERE clauses
+///
+size_t getWhereList(Table_t *table, Command_t* cmd, int * list){
+    //If we ge t here is because we have atleast one condition, so we dont have to check
+    //that *again*
+    size_t idx = 0;
+    // Now we loop until we get the first field name
+    while(strncmp(cmd->args[idx],"where",5)){
+        idx++;
+    }
+    idx++;
+    //Now we 
+    char * fieldName = cmd->args[idx++];
+    char * operatorchar = cmd->args[idx++];
+    char * immField = cmd->args[idx++];
+
+    char * fieldName2;
+    char * operatorchar2;
+    char * immField2;
+    if(cmd->condArgs.ANDsAmount > 0 || cmd->condArgs.ORsAmount> 0){//then this means we have a second condition 
+        idx++;//Skip the logical operator
+        fieldName2 = cmd->args[idx++];
+        operatorchar2 = cmd->args[idx++];
+        immField2 = cmd->args[idx++];
+    }
+    size_t tableidx =0;
+    size_t listIdx= 0;
+
+    User_t * usr_ptr;
+    while(tableidx < table->len){
+
+        usr_ptr = get_User(table, tableidx);
+        bool cond1 = subCompare(fieldName,operatorchar,immField,usr_ptr);
+
+        if(cmd->condArgs.ANDsAmount > 0){
+            if(cond1 && subCompare(fieldName2,operatorchar2,immField2,usr_ptr)){
+                list[listIdx++] = tableidx;
+            }
+        }else if(cmd->condArgs.ORsAmount > 0 ){
+            if(cond1 || subCompare(fieldName2,operatorchar2,immField2,usr_ptr)){
+                list[listIdx++] = tableidx;
+            }
+        }else if(cond1 == true){
+            list[listIdx++] = tableidx;
+        }
+        tableidx++;
+    }
+    return listIdx;
+}
+/// When returning 0 we mean false otherwise(usually 1) we mean true
+bool subCompare(char * fieldName, char * operatorchar, char * literal,User_t* usr_ptr){
+    bool isNumber = (strtoul(literal,NULL,10) == 0 && strncmp(literal,"0",1))? 0: 1;//if 0 then false otherwise true 
+    char * fieldValueC;
+    unsigned int fieldValueI;
+
+    if (!strncmp(fieldName,"id",2))
+        fieldValueI = usr_ptr->id;
+    else if(!strncmp(fieldName,"age",3))
+        fieldValueI = usr_ptr->age;
+    else if(!strncmp(fieldName,"email",5))
+        fieldValueC = usr_ptr->email;
+    else if(!strncmp(fieldName,"name",4))
+        fieldValueC = usr_ptr->name;
+
+    if(!strncmp(operatorchar,"=",1)){//Todos pueden ser igualados
+        if(isNumber)
+            return (fieldValueI == strtoul(literal,NULL,10));
+        else
+            return (!strcmp(fieldValueC,literal));
+    } else if(!strncmp(operatorchar, "!=",2)){
+        if(isNumber)
+            return fieldValueI != strtoul(literal,NULL,10);
+        else
+            return (strcmp(fieldValueC,literal) == 0)? false: true;
+    } else if(!strncmp(operatorchar, ">=",2)){
+        return fieldValueI >= strtoul(literal,NULL,10);
+    } else if(!strncmp(operatorchar, "<=",2)){
+        return fieldValueI <= strtoul(literal,NULL,10);
+    } else if(!strncmp(operatorchar, ">",1)){
+        return fieldValueI > strtoul(literal,NULL,10);
+    } else if(!strncmp(operatorchar, "<",1)){
+        return fieldValueI < strtoul(literal,NULL,10);
+    }
+    return false;
+}
+
 ///
 /// Show the help messages
 ///

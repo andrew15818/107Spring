@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Command.h"
-/*If it doesn't work, remember to change 
- * the upate command*/
+
 CMD_t cmd_list[] = {
     { ".exit", 5, BUILT_IN_CMD },
     { ".output", 7, BUILT_IN_CMD },
@@ -10,8 +9,8 @@ CMD_t cmd_list[] = {
     { ".help", 5, BUILT_IN_CMD },
     { "insert", 6, QUERY_CMD },
     { "select", 6, QUERY_CMD },
-	{ "update", 6, EDIT_CMD},
-	{ "delete", 6, EDIT_CMD},
+    { "update", 6, QUERY_CMD },
+    { "delete", 6, QUERY_CMD },
     { "", 0, UNRECOG_CMD },
 };
 
@@ -23,13 +22,6 @@ Command_t* new_Command() {
     cmd->args = NULL;
     cmd->args_len = 0;
     cmd->args_cap = 0;
-	cmd->where_count=0;
-	cmd->has_where =0;
-	cmd->has_and =0;
-	cmd->has_or =0;
-	cmd->has_aggreg =0;
-	cmd->has_update =0;
-	cmd->aggreg_count =0;
     return cmd;
 }
 
@@ -110,10 +102,5 @@ void cleanup_Command(Command_t *cmd) {
     }
     cmd->type = UNRECOG_CMD;
     cmd->args_len = 0;
-	cmd->has_where = 0;
-	cmd->where_count =0;
-	cmd->has_aggreg =0;
-	cmd->aggreg_count=0;
-	cmd->has_update =0;
 }
 

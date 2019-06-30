@@ -34,16 +34,16 @@ int add_User(Table_t *table, User_t *user) {
     if (!table || !user) {
         return 0;
     }
-    // Check id doesn't exist in the table
+    // Check id doesn't exist in the table otherwise take idx to the end
     for (idx = 0; idx < table->len; idx++) {
         usr_ptr = get_User(table, idx);
-        if (usr_ptr->id == user->id) {
+        if (usr_ptr->id == user->id) {//we are check user id not row id
             return 0;
         }
     }
-    if (table->len == table->capacity) {
-        User_t *new_user_buf = (User_t*)malloc(sizeof(User_t)*(table->len+EXT_LEN));
-        unsigned char *new_cache_buf = (unsigned char *)malloc(sizeof(unsigned char)*(table->len+EXT_LEN));
+    if (table->len == table->capacity) {//This will ONLY run when we have maxed out the table
+        User_t *new_user_buf = (User_t*)malloc(sizeof(User_t)*(table->len+EXT_LEN));//For user info
+        unsigned char *new_cache_buf = (unsigned char *)malloc(sizeof(unsigned char)*(table->len+EXT_LEN));//For the cache MAP(?)
 
         memcpy(new_user_buf, table->users, sizeof(User_t)*table->len);
 
@@ -57,10 +57,16 @@ int add_User(Table_t *table, User_t *user) {
         table->cache_map = new_cache_buf;
         table->capacity += EXT_LEN;
     }
-    idx = table->len;
+    idx = table->len;//so we are adding every sinle new user at the end of the table
+    /*for(int i =0;i<table->len;i++){*/
+        /*printf("Before new Cache_map[%d] = %d\n",i,table->cache_map[i]);*/
+    /*}*/
     memcpy((table->users)+idx, user, sizeof(User_t));
-    table->cache_map[idx] = 1;
+    table->cache_map[idx] = 1;//este es el problema 
     table->len++;
+    /*for(int i =0;i<table->len;i++){*/
+        /*printf("Cache_map[%d] = %d\n",i,table->cache_map[i]);*/
+    /*}*/
     return 1;
 }
 
@@ -138,20 +144,22 @@ int load_table(Table_t *table, char *file_name) {
 User_t* get_User(Table_t *table, size_t idx) {
     size_t archived_len;
     struct stat st;
-    if (!table->cache_map[idx]) {
-        if (idx > INIT_TABLE_SIZE) {
+    if (!table->cache_map[idx]) {//if cache map is 0
+        if (idx > INIT_TABLE_SIZE) {//if oour index is greater than table sise
             goto error;
         }
+        // Stat returns negative when error ) if the file is succesfully obtained
+        // Thus if no file exists we go to error
         if (stat(table->file_name, &st) != 0) {
             goto error;
         }
+        //st_szie is size in bytes of open file
         archived_len = st.st_size / sizeof(User_t);
         if (idx >= archived_len) {
             //neither in file, nor in memory
             goto error;
         }
-
-        fseek(table->fp, idx*sizeof(User_t), SEEK_SET);
+        fseek(table->fp, idx*sizeof(User_t), SEEK_SET);//fp == filename
         fread(table->users+idx, sizeof(User_t), 1, table->fp);
         table->cache_map[idx] = 1;
     }

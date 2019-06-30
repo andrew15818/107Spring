@@ -5,12 +5,13 @@ enum {
     UNRECOG_CMD,
     BUILT_IN_CMD,
     QUERY_CMD,
-	EDIT_CMD,
 };
 
 enum {
     INSERT_CMD = 100,
     SELECT_CMD,
+    UPDATE_CMD,
+    DELETE_CMD,
 };
 
 typedef struct {
@@ -26,10 +27,30 @@ typedef struct SelectArgs {
     size_t fields_len;
     int offset;
     int limit;
+    int aggregatorAmount;
 } SelectArgs_t;
 
+typedef struct UpdateArgs {
+    //char **fields; I dont think i need this, since we wiill only update one at a time
+    //size_t fields_len; Creo que tampoco necesito esto
+    char fieldNameToUpt[255+1];
+    char valToUptTo[255+1];
+} UpdateArgs_t;
+
+typedef struct DelArgs {
+    //char **fields; I dont think i need this, since we wiill only update one at a time
+    //size_t fields_len; Creo que tampoco necesito esto
+    //NOTHING here really
+} DelArgs_t;
+typedef struct CondArgs {
+    int whereConditions;
+    int ANDsAmount;
+    int ORsAmount;
+} CondArgs_t;
 typedef union {
     SelectArgs_t sel_args;
+    UpdateArgs_t upt_args;
+    DelArgs_t del_args;
 } CmdArg_t;
 
 typedef struct Command {
@@ -37,15 +58,8 @@ typedef struct Command {
     char **args;
     size_t args_len;
     size_t args_cap;
-	size_t has_where;
-	size_t has_and;
-	size_t has_or;
-	size_t where_count;
-	size_t has_update;
-	size_t has_delete;
-	size_t has_aggreg;
-	size_t aggreg_count;
     CmdArg_t cmd_args;
+    CondArgs_t condArgs;
 } Command_t;
 
 Command_t* new_Command();

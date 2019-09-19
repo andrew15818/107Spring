@@ -62,7 +62,9 @@ void HashTable::addItem(std::string key, std::string gender, int height, int wei
 		}
 		tmp->prev = insert;
 		insert->next = tmp;
+	//	delete insert;
 	}
+	
 }
 /*search for the given item in the list and return const ref*/
 const patient& HashTable::operator[](std::string key){

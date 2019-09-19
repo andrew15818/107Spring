@@ -4,7 +4,7 @@
 #include "graph.h"
 using namespace std;
 int main(){
-	size_t nodes;
+	ssize_t nodes;
 	ofstream output;
 	ifstream input_file;
 	input_file.open("sample data.txt");
@@ -13,7 +13,7 @@ int main(){
 	while(input_file>>nodes){
 
 		graph Graph(nodes);
-		size_t input,layers;
+		ssize_t input,layers;
 		
 		
 		
@@ -24,7 +24,7 @@ int main(){
 			Graph.newNode(input);
 		}
 		input_file>>layers;
-		size_t primary, secondary;
+		ssize_t primary, secondary;
 		string order;
 
 		for(int j=0;j<layers;j++){

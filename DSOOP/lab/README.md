@@ -1,4 +1,8 @@
-#This is my private repo for my Data Structures and Object Oriented Labs
+# Some of the labs for the Data Structures and Object-Oriented Programming class
 ---
-I might make this repo public after the term is over, but that remains to be seen.
+These are some competitive programming problems designed to test skills such as
+dynammic programming, number theory, string parsing, etc...
+
+Taken from either [NCTU Online Judge](https://oj.nctu.me) or 
+[UVA Online Judge](http://uva.onlinejudge.org/)
 
